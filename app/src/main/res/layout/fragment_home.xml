@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- 顶部区域：弧形背景+内容 -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="380dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="404dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/top_home_bg" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/home_top_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="32dp"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:background="@android:color/transparent">
+
+                <!-- 欢迎语 -->
+                <TextView
+                    android:id="@+id/tv_hi_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hi, Linda"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_on_primary"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <!-- 积分区 -->
+                <LinearLayout
+                    android:id="@+id/ll_points"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/tv_hi_user"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/ic_welcome"
+                        android:tint="@color/color_accent"
+                        android:layout_marginEnd="4dp"
+                        tools:ignore="UseAppTint" />
+                    <TextView
+                        android:id="@+id/tv_points"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Welcome!👋"
+                        android:textColor="@color/color_accent"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <!-- 头像 -->
+
+                <!-- 搜索栏 -->
+                <ImageView
+                    android:id="@+id/iv_avatar"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@drawable/bg_avatar_circle"
+                    android:elevation="6dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_avatar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/search_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/bg_search_bar"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="32dp"
+                    android:elevation="4dp"
+                    app:layout_constraintTop_toBottomOf="@id/ll_points"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <ImageView
+                        android:id="@+id/iv_search"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="16dp"
+                        android:src="@drawable/ic_search"
+                        android:tint="@color/text_secondary"
+                        tools:ignore="UseAppTint" />
+
+                    <EditText
+                        android:id="@+id/et_search"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:hint="Where to go?"
+                        android:textColor="@color/text_primary"
+                        android:textColorHint="@color/text_secondary"
+                        android:textSize="16sp"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="16dp"
+                        android:inputType="text" />
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- 轮播图卡片悬浮在下缘，直接写入内容 -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="0dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@android:color/transparent">
+
+                <!-- 轮播图片 -->
+                <ImageView
+                    android:id="@+id/banner_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_image_placeholder"
+                    android:background="@drawable/bg_banner_round" />
+
+                <!-- 左翻页按钮 -->
+                <ImageView
+                    android:id="@+id/btn_banner_left"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_banner_btn"
+                    android:src="@drawable/ic_arrow_left"
+                    android:padding="6dp"
+                    android:alpha="0.7" />
+
+                <!-- 右翻页按钮 -->
+                <ImageView
+                    android:id="@+id/btn_banner_right"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/bg_banner_btn"
+                    android:src="@drawable/ic_arrow_right"
+                    android:padding="6dp"
+                    android:alpha="0.7" />
+
+                <!-- 指示器 -->
+                <LinearLayout
+                    android:id="@+id/banner_indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginEnd="16dp">
+                    <!-- 小圆点可动态添加 -->
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:layout_margin="2dp"
+                        android:background="@drawable/bg_banner_dot_selected" />
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:layout_margin="2dp"
+                        android:background="@drawable/bg_banner_dot_unselected" />
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:layout_margin="2dp"
+                        android:background="@drawable/bg_banner_dot_unselected" />
+                </LinearLayout>
+
+            </FrameLayout>
+        </FrameLayout>
+
+        <!-- 分类按钮区 -->
+        <include layout="@layout/category_buttons_home" />
+
+        <!-- 内容区 -->
+        <FrameLayout
+            android:id="@+id/home_content_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView> 

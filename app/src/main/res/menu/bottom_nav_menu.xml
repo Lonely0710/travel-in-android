@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 底部导航菜单，icon命名规范：ic_nav_home, ic_nav_explore, ic_nav_routes -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_nav_home"
+        android:title="首页" />
+    <item
+        android:id="@+id/nav_explore"
+        android:icon="@drawable/ic_nav_explore"
+        android:title="探索" />
+    <item
+        android:id="@+id/nav_routes"
+        android:icon="@drawable/ic_nav_routes"
+        android:title="路线" />
+</menu> 
