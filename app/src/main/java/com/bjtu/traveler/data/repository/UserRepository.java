@@ -31,30 +31,27 @@ public class UserRepository {
     }
 
     /**
-     * 用户注册
+     * 注册方法，支持手机号、邮箱、用户名、密码
+     * @param email 邮箱
+     * @param phone 手机号
      * @param username 用户名
      * @param password 密码
-     * @param email 邮箱
      * @param callback 注册结果回调
      */
-    public void register(String username, String password, String email, 
+    public void register(String email, String phone, String username, String password,
                          MutableLiveData<BmobUserResult> callback) {
-        BmobUser user = new BmobUser();
+        User user = new User();
+        user.setEmail(email);
+        user.setMobilePhoneNumber(phone);
         user.setUsername(username);
         user.setPassword(password);
-        
-        if (email != null && !email.isEmpty()) {
-            user.setEmail(email);
-        }
-        
-        user.signUp(new SaveListener<BmobUser>() {
+        user.setAvatarUrl("https://api.multiavatar.com/" + username + ".png");
+        user.signUp(new SaveListener<User>() {
             @Override
-            public void done(BmobUser bmobUser, BmobException e) {
+            public void done(User bmobUser, BmobException e) {
                 if (e == null) {
-                    // 注册成功
                     callback.postValue(new BmobUserResult(true, bmobUser, null));
                 } else {
-                    // 注册失败
                     callback.postValue(new BmobUserResult(false, null, e.getMessage()));
                 }
             }
@@ -62,41 +59,27 @@ public class UserRepository {
     }
 
     /**
-     * 用户登录
+     * 统一登录用User
      * @param username 用户名/邮箱
      * @param password 密码
      * @param callback 登录结果回调
      */
-    public void login(String username, String password, 
+    public void login(String username, String password,
                       MutableLiveData<BmobUserResult> callback) {
-        // 判断是否是邮箱登录
-        if (username.contains("@")) {
-            // 邮箱登录
-            BmobUser.loginByAccount(username, password, new LogInListener<BmobUser>() {
-                @Override
-                public void done(BmobUser user, BmobException e) {
-                    handleLoginResult(user, e, callback);
-                }
-            });
-        } else {
-            // 用户名登录
-            BmobUser user = new BmobUser();
-            user.setUsername(username);
-            user.setPassword(password);
-            user.login(new SaveListener<BmobUser>() {
-                @Override
-                public void done(BmobUser bmobUser, BmobException e) {
-                    handleLoginResult(bmobUser, e, callback);
-                }
-            });
-        }
+        User.loginByAccount(username, password, new LogInListener<User>() {
+            @Override
+            public void done(User user, BmobException e) {
+                handleLoginResult(user, e, callback);
+            }
+        });
     }
 
     /**
      * 处理登录结果
      */
-    private void handleLoginResult(BmobUser user, BmobException e, 
+    private void handleLoginResult(User user, BmobException e,
                                  MutableLiveData<BmobUserResult> callback) {
+        if (callback == null) return; // 防止NPE
         if (e == null) {
             // 登录成功
             callback.postValue(new BmobUserResult(true, user, null));
@@ -115,11 +98,16 @@ public class UserRepository {
     }
 
     /**
-     * 获取当前登录用户
+     * 统一返回User
      * @return 当前用户
      */
-    public BmobUser getCurrentUser() {
-        return BmobUser.getCurrentUser();
+    public User getCurrentUser() {
+        BmobUser bmobUser = BmobUser.getCurrentUser(User.class);
+        if (bmobUser instanceof User) {
+            return (User) bmobUser;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -134,10 +122,10 @@ public class UserRepository {
      */
     public static class BmobUserResult {
         private boolean success;
-        private BmobUser user;
+        private User user;
         private String errorMsg;
 
-        public BmobUserResult(boolean success, BmobUser user, String errorMsg) {
+        public BmobUserResult(boolean success, User user, String errorMsg) {
             this.success = success;
             this.user = user;
             this.errorMsg = errorMsg;
@@ -147,40 +135,12 @@ public class UserRepository {
             return success;
         }
 
-        public BmobUser getUser() {
+        public User getUser() {
             return user;
         }
 
         public String getErrorMsg() {
             return errorMsg;
         }
-    }
-
-    /**
-     * 使用手机号注册
-     * @param email 邮箱
-     * @param phone 手机号
-     * @param username 用户名
-     * @param password 密码
-     * @param callback 注册结果回调
-     */
-    public void registerWithPhone(String email, String phone, String username, String password, 
-                                 MutableLiveData<BmobUserResult> callback) {
-        User user = new User();
-        user.setEmail(email);
-        user.setMobilePhoneNumber(phone);
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setAvatarUrl("https://api.multiavatar.com/" + username + ".png"); // 随机头像
-        user.signUp(new SaveListener<User>() {
-            @Override
-            public void done(User bmobUser, BmobException e) {
-                if (e == null) {
-                    callback.postValue(new BmobUserResult(true, bmobUser, null));
-                } else {
-                    callback.postValue(new BmobUserResult(false, null, e.getMessage()));
-                }
-            }
-        });
     }
 } 

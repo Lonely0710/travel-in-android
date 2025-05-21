@@ -6,16 +6,32 @@ import android.os.Handler;
 import android.os.Looper;
 import androidx.annotation.Nullable;
 
+import com.bjtu.traveler.viewmodel.UserViewModel;
+import com.bjtu.traveler.data.repository.UserRepository;
+
 public class SplashActivity extends BaseActivity {
 
-    private static final long SPLASH_DISPLAY_LENGTH = 5000; // 闪屏页显示时间（毫秒）
+    private static final long SPLASH_DISPLAY_LENGTH = 1500; // 闪屏页显示时间（毫秒）
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // 延迟SPLASH_DISPLAY_LENGTH后跳转到AuthActivity
+        // 跳过登录流程，直接用测试账号登录
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            // 测试账号
+            String testEmail = "aaa@123.com";
+            String testPassword = "12345678";
+            UserRepository.getInstance().login(testEmail, testPassword, null);
+            // 直接跳转到MainActivity
+            Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
+            startActivity(mainIntent);
+            finish();
+        }, SPLASH_DISPLAY_LENGTH);
+
+        /*
+        // 原始登录逻辑：
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -34,5 +50,6 @@ public class SplashActivity extends BaseActivity {
                 finish(); // 关闭SplashActivity
             }
         }, SPLASH_DISPLAY_LENGTH);
+        */
     }
 }

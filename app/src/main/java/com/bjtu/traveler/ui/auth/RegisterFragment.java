@@ -158,8 +158,8 @@ public class RegisterFragment extends Fragment {
         }
         // 禁用注册按钮，防止重复点击
         btnCreateAccount.setEnabled(false);
-        // 调用ViewModel执行注册（可扩展UserRepository支持手机号）
-        userViewModel.registerWithPhone(email, phone, fullName, password);
+        // 调用ViewModel执行注册
+        userViewModel.register(email, phone, fullName, password);
     }
 
     @Override

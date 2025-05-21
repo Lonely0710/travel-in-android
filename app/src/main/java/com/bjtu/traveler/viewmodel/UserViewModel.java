@@ -47,12 +47,13 @@ public class UserViewModel extends AndroidViewModel {
 
     /**
      * 用户注册
+     * @param email 邮箱
+     * @param phone 手机号
      * @param username 用户名
      * @param password 密码
-     * @param email 邮箱
      */
-    public void register(String username, String password, String email) {
-        userRepository.register(username, password, email, registerResult);
+    public void register(String email, String phone, String username, String password) {
+        userRepository.register(email, phone, username, password, registerResult);
     }
 
     /**
@@ -81,17 +82,6 @@ public class UserViewModel extends AndroidViewModel {
      */
     public void logout() {
         userRepository.logout();
-    }
-
-    /**
-     * 使用手机号注册
-     * @param email 邮箱
-     * @param phone 手机号
-     * @param username 用户名
-     * @param password 密码
-     */
-    public void registerWithPhone(String email, String phone, String username, String password) {
-        userRepository.registerWithPhone(email, phone, username, password, registerResult);
     }
 
     /**

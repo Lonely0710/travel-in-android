@@ -11,8 +11,8 @@ public class HomeViewModel extends ViewModel {
     private final MutableLiveData<User> userLiveData = new MutableLiveData<>();
 
     public HomeViewModel() {
-        // 获取当前登录用户信息
-        User user = (User) UserRepository.getInstance().getCurrentUser();
+        // 直接获取User类型
+        User user = UserRepository.getInstance().getCurrentUser();
         userLiveData.setValue(user);
     }
 
@@ -22,7 +22,7 @@ public class HomeViewModel extends ViewModel {
 
     // 刷新用户信息
     public void refreshUser() {
-        User user = (User) UserRepository.getInstance().getCurrentUser();
+        User user = UserRepository.getInstance().getCurrentUser();
         userLiveData.setValue(user);
     }
 } 
