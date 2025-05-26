@@ -36,6 +36,10 @@
         android:enableOnBackInvokedCallback="true"
         android:name=".TravelerApplication">
 
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="ATGR8aZGPyUVcOH2jBEBqFjevD5vCaGH" />
+
         <activity android:name=".SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.Traveler.Splash">
@@ -45,9 +49,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".AuthActivity"
-            android:exported="false"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
+<!--        <activity android:name=".AuthActivity"-->
+<!--            android:exported="false"-->
+<!--            android:windowSoftInputMode="stateVisible|adjustResize"/>-->
 
         <activity android:name=".MainActivity"
             android:exported="false"
