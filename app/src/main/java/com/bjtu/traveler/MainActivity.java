@@ -1,11 +1,13 @@
 package com.bjtu.traveler;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import com.bjtu.traveler.ui.home.HomeFragment;
 import com.bjtu.traveler.ui.explore.ExploreFragment;
+import com.bjtu.traveler.ui.profile.EditFragment;
+import com.bjtu.traveler.ui.profile.FavoriteFragment;
 import com.bjtu.traveler.ui.routes.RoutesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 

@@ -11,11 +11,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import com.bjtu.traveler.R;
+import com.bjtu.traveler.ui.profile.ProfileFragment;
+import com.bjtu.traveler.utils.FragmentSwitcher;
 import com.bjtu.traveler.viewmodel.HomeViewModel;
 import com.bjtu.traveler.viewmodel.UserViewModel;
 import com.bumptech.glide.Glide;
+import com.google.android.material.navigation.NavigationView;
+
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.core.view.GravityCompat;
 
 public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
@@ -29,6 +36,9 @@ public class HomeFragment extends Fragment {
         TextView tvHiUser = view.findViewById(R.id.tv_hi_user);
         TextView tvPoints = view.findViewById(R.id.tv_points);
         EditText etSearch = view.findViewById(R.id.et_search);
+
+        // 获取侧边栏布局
+        DrawerLayout drawerLayout = requireActivity().findViewById(R.id.drawer_layout);
 
         // 初始化ViewModel
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -52,6 +62,18 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // HomeFragment.java 头像点击事件
+        ivAvatar.setOnClickListener(v -> {
+            FragmentManager fm = requireActivity().getSupportFragmentManager();
+            Fragment fragment = fm.findFragmentByTag("ProfileFragment");
+            if (fragment == null || !fragment.isAdded()) {
+                fm.beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_left, 0, 0, R.anim.slide_out_left)
+                        .add(R.id.fragment_container, new ProfileFragment(), "ProfileFragment")
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
 
         return view;
     }

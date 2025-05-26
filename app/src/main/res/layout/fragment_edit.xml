@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="编辑个人信息"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"/>
+
+        <ImageView
+            android:id="@+id/iv_avatar_edit"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/ic_avatar"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="12dp"/>
+
+<!--        <Button-->
+<!--            android:id="@+id/btn_change_avatar"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="更换头像"-->
+<!--            android:layout_gravity="center_horizontal"-->
+<!--            android:layout_marginBottom="24dp"/>-->
+
+        <EditText
+            android:id="@+id/et_edit_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="用户名"
+            android:minHeight="48dp" />
+
+        <EditText
+            android:id="@+id/et_edit_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="邮箱"
+            android:inputType="textEmailAddress"
+            android:minHeight="48dp"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:id="@+id/et_edit_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="手机号"
+            android:inputType="phone"
+            android:minHeight="48dp"
+            android:layout_marginTop="12dp"/>
+
+        <Button
+            android:id="@+id/btn_save_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="保存"
+            android:layout_marginTop="24dp"/>
+    </LinearLayout>
+</ScrollView>

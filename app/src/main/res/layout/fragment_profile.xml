@@ -1,0 +1,70 @@
+<!-- res/layout/fragment_profile.xml -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 右侧空白透明区域，拦截点击 -->
+    <View
+        android:id="@+id/profile_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#00000000" />
+
+    <!-- 左侧侧边栏内容 -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:background="#CCFFFFFF">
+
+        <include layout="@layout/nav_header_profile" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp">
+
+            <TextView
+                android:id="@+id/tv_edit_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="修改个人信息"
+                android:textSize="16sp"
+                android:drawableLeft="@drawable/ic_person"
+                android:drawablePadding="16dp"
+                android:padding="20dp" />
+
+            <TextView
+                android:id="@+id/tv_favorite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="收藏列表"
+                android:textSize="16sp"
+                android:drawableLeft="@drawable/ic_favorite_border"
+                android:drawablePadding="16dp"
+                android:padding="20dp" />
+
+            <TextView
+                android:id="@+id/tv_post_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="发帖记录"
+                android:textSize="16sp"
+                android:drawableLeft="@drawable/ic_history"
+                android:drawablePadding="16dp"
+                android:padding="20dp" />
+
+            <TextView
+                android:id="@+id/tv_logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="退出登录"
+                android:textSize="16sp"
+                android:drawableLeft="@drawable/ic_logout"
+                android:drawablePadding="16dp"
+                android:padding="20dp" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>
+

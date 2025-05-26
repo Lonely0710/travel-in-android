@@ -1,0 +1,25 @@
+<!-- res/layout/nav_header_profile.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="160dp"
+    android:gravity="center"
+    android:background="@color/color_primary">
+
+    <ImageView
+        android:id="@+id/iv_profile_avatar"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_avatar"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/tv_profile_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="用户名"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:fontFamily="@font/fangzheng"/>
+</LinearLayout>
