@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.bjtu.traveler.ui.home.HomeFragment;
 import com.bjtu.traveler.ui.explore.ExploreFragment;
-import com.bjtu.traveler.ui.routes.RoutesFragment;
+import com.bjtu.traveler.ui.routes.ChatFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends BaseActivity {
@@ -24,7 +24,7 @@ public class MainActivity extends BaseActivity {
             } else if (item.getItemId() == R.id.nav_explore) {
                 selected = new ExploreFragment();
             } else if (item.getItemId() == R.id.nav_routes) {
-                selected = new RoutesFragment();
+                selected = new ChatFragment();
             }
             if (selected != null) {
                 switchFragment(R.id.fragment_container, selected, false);
