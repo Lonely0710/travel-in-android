@@ -35,7 +35,7 @@ dependencies {
 
     implementation(libs.appcompat)
     implementation(libs.material)
-    implementation(files("C:\\Users\\28188\\AndroidStudioProjects\\travel-in-Android\\app\\libs\\BaiduLBS_Android.aar"))
+    implementation(files("libs/BaiduLBS_Android.aar"))
     implementation(libs.navigation.runtime.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
