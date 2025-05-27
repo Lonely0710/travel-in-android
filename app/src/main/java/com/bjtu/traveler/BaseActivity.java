@@ -46,12 +46,12 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     // 显示系统栏
-    protected void showSystemBars() {
+    public void showSystemBars() {
         insetsController.show(WindowInsetsCompat.Type.systemBars());
     }
 
     // 隐藏系统栏
-    protected void hideSystemBars() {
+    public void hideSystemBars() {
         insetsController.hide(WindowInsetsCompat.Type.statusBars() | WindowInsetsCompat.Type.navigationBars());
         insetsController.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_SWIPE);
     }

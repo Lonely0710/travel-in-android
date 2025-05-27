@@ -38,15 +38,6 @@ public class VRFragment extends Fragment implements SensorEventListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_vr, container, false);
-        // 新增：发现按钮跳转
-        TextView tvBackDiscover = view.findViewById(R.id.tv_back_discover);
-        tvBackDiscover.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, new DiscoverFragment())
-                .addToBackStack(null)
-                .commit();
-        });
         webView = view.findViewById(R.id.webViewVR);
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);

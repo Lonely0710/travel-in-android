@@ -3,22 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- VR返回发现页按钮，左上角 -->
-    <TextView
-        android:id="@+id/tv_back_discover"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="发现"
-        android:textSize="18sp"
-        android:textColor="@color/black"
-        android:paddingLeft="16dp"
-        android:paddingTop="16dp"
-        android:background="@android:color/transparent"
-        android:clickable="true"
-        android:focusable="true"
-        android:layout_gravity="start|top"
-        android:elevation="8dp"/>
-
     <WebView
         android:id="@+id/webViewVR"
         android:layout_width="match_parent"

@@ -78,6 +78,15 @@ public class ChatFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
+        // 设置顶部栏标题为"Routes"
+        View topBar = view.findViewById(R.id.topbar_chat);
+        if (topBar != null) {
+            TextView tvTitle = topBar.findViewById(R.id.tv_title);
+            if (tvTitle != null) {
+                tvTitle.setText("Routes");
+            }
+        }
+
         initialStateContainer = view.findViewById(R.id.initial_state_container);
         chatContainer = view.findViewById(R.id.chat_container);
         lottieAnimationView = view.findViewById(R.id.lottie_animation_view);

@@ -7,6 +7,12 @@
     android:background="@color/background"
     tools:context=".ui.routes.ChatFragment">
 
+    <include
+        layout="@layout/topbar_home_explore_routes"
+        android:id="@+id/topbar_chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <!-- 初始状态：欢迎界面和启动按钮 -->
     <LinearLayout
         android:id="@+id/initial_state_container"

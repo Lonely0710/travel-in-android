@@ -112,6 +112,14 @@ public class RoutesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_routes, container, false);
 
+        View topBar = view.findViewById(R.id.topbar_routes);
+        if (topBar != null) {
+            TextView tvTitle = topBar.findViewById(R.id.tv_title);
+            if (tvTitle != null) {
+                tvTitle.setText("Routes");
+            }
+        }
+
         mMapView = view.findViewById(R.id.mapView);
         if (mMapView != null) {
             mBaiduMap = mMapView.getMap();

@@ -31,11 +31,20 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-        ImageView ivAvatar = view.findViewById(R.id.iv_avatar);
-        TextView tvHiUser = view.findViewById(R.id.tv_hi_user);
-        TextView tvPoints = view.findViewById(R.id.tv_points);
-        EditText etSearch = view.findViewById(R.id.et_search);
+        View root = inflater.inflate(R.layout.fragment_home, container, false);
+
+        View topBar = root.findViewById(R.id.topbar_home);
+        if (topBar != null) {
+            TextView tvTitle = topBar.findViewById(R.id.tv_title);
+            if (tvTitle != null) {
+                tvTitle.setText("Home");
+            }
+        }
+
+        ImageView ivAvatar = root.findViewById(R.id.iv_avatar);
+        TextView tvHiUser = root.findViewById(R.id.tv_hi_user);
+        TextView tvPoints = root.findViewById(R.id.tv_points);
+        EditText etSearch = root.findViewById(R.id.et_search);
 
         // 获取侧边栏布局
         DrawerLayout drawerLayout = requireActivity().findViewById(R.id.drawer_layout);
@@ -75,6 +84,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        return view;
+        return root;
     }
 } 

@@ -7,157 +7,309 @@
     android:background="@color/background"
     tools:context=".ui.routes.RoutesFragment">
 
-<ScrollView
-    android:id="@+id/scroll_view_content"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:visibility="gone">
-
-    <LinearLayout
-        android:id="@+id/content_layout"
+    <!-- Top Bar -->
+    <include
+        layout="@layout/topbar_home_explore_routes"
+        android:id="@+id/topbar_routes"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="16dp">
+        android:layout_height="wrap_content" />
 
-    <!-- Search Bar and Calendar -->
-    <RelativeLayout
+    <ScrollView
+        android:id="@+id/scroll_view_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="8dp">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
-    <LinearLayout
-        android:id="@+id/search_container"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_toStartOf="@+id/btn_calendar_container"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/rounded_corner_background"
-        android:padding="12dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        <LinearLayout
+            android:id="@+id/content_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_location_pin"
-            app:tint="@color/text_secondary"
-            android:layout_marginEnd="8dp"/>
+        <!-- Search Bar and Calendar -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp">
+
+        <LinearLayout
+            android:id="@+id/search_container"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_toStartOf="@+id/btn_calendar_container"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/rounded_corner_background"
+            android:padding="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_location_pin"
+                app:tint="@color/text_secondary"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="输入出发地、目的地或特殊需求"
+                android:textColor="@color/text_secondary"
+                android:textSize="15sp"/>
+        </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/btn_calendar_container"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="15dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:background="@drawable/calendar_icon_circle_background"
+                android:elevation="2dp">
+
+                <ImageButton
+                    android:id="@+id/btn_calendar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_calendar"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:tint="@color/text_on_primary"
+                    android:padding="12dp"
+                    android:scaleType="fitCenter"
+                    android:contentDescription="Calendar" />
+            </FrameLayout>
+
+        </RelativeLayout>
+
+        <!-- Preferences -->
+        <LinearLayout
+            android:id="@+id/preferences_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp"
+            android:gravity="center_vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="输入出发地、目的地或特殊需求"
+            android:text="偏好: "
+            android:textSize="14sp"
             android:textColor="@color/text_secondary"
-            android:textSize="15sp"/>
-    </LinearLayout>
+            android:layout_marginEnd="8dp"/>
 
-        <FrameLayout
-            android:id="@+id/btn_calendar_container"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="15dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true"
-            android:background="@drawable/calendar_icon_circle_background"
-            android:elevation="2dp">
+        <TextView
+            android:id="@+id/tvUserPreferences1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="美食"
+            android:background="@drawable/rounded_corner_background"
+            android:paddingStart="12dp" android:paddingEnd="12dp"
+            android:paddingTop="6dp" android:paddingBottom="6dp"
+            android:layout_marginEnd="8dp"
+            android:textSize="12sp"
+            android:textColor="@color/text_primary"/>
+        <TextView
+            android:id="@+id/tvUserPreferences2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="文化"
+            android:background="@drawable/rounded_corner_background"
+            android:paddingStart="12dp" android:paddingEnd="12dp"
+            android:paddingTop="6dp" android:paddingBottom="6dp"
+            android:layout_marginEnd="8dp"
+            android:textSize="12sp"
+            android:textColor="@color/text_primary"/>
+        <TextView
+            android:id="@+id/tvUserPreferences3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="购物"
+            android:background="@drawable/rounded_corner_background"
+            android:paddingStart="12dp" android:paddingEnd="12dp"
+            android:paddingTop="6dp" android:paddingBottom="6dp"
+            android:layout_marginEnd="8dp"
+            android:textSize="12sp"
+            android:textColor="@color/text_primary"/>
+        <TextView
+            android:id="@+id/tvUserPreferences4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="休闲"
+            android:background="@drawable/rounded_corner_background"
+            android:paddingStart="12dp" android:paddingEnd="12dp"
+            android:paddingTop="6dp" android:paddingBottom="6dp"
+            android:textSize="12sp"
+            android:textColor="@color/text_primary"/>
+        </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/btn_calendar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_calendar"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/text_on_primary"
-                android:padding="12dp"
-                android:scaleType="fitCenter"
-                android:contentDescription="Calendar" />
-        </FrameLayout>
-
-    </RelativeLayout>
-
-    <!-- Preferences -->
-    <LinearLayout
-        android:id="@+id/preferences_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="8dp"
-        android:gravity="center_vertical">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="偏好: "
-        android:textSize="14sp"
-        android:textColor="@color/text_secondary"
-        android:layout_marginEnd="8dp"/>
-
-    <TextView
-        android:id="@+id/tvUserPreferences1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="美食"
-        android:background="@drawable/rounded_corner_background"
-        android:paddingStart="12dp" android:paddingEnd="12dp"
-        android:paddingTop="6dp" android:paddingBottom="6dp"
-        android:layout_marginEnd="8dp"
-        android:textSize="12sp"
-        android:textColor="@color/text_primary"/>
-    <TextView
-        android:id="@+id/tvUserPreferences2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="文化"
-        android:background="@drawable/rounded_corner_background"
-        android:paddingStart="12dp" android:paddingEnd="12dp"
-        android:paddingTop="6dp" android:paddingBottom="6dp"
-        android:layout_marginEnd="8dp"
-        android:textSize="12sp"
-        android:textColor="@color/text_primary"/>
-    <TextView
-        android:id="@+id/tvUserPreferences3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="购物"
-        android:background="@drawable/rounded_corner_background"
-        android:paddingStart="12dp" android:paddingEnd="12dp"
-        android:paddingTop="6dp" android:paddingBottom="6dp"
-        android:layout_marginEnd="8dp"
-        android:textSize="12sp"
-        android:textColor="@color/text_primary"/>
-    <TextView
-        android:id="@+id/tvUserPreferences4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="休闲"
-        android:background="@drawable/rounded_corner_background"
-        android:paddingStart="12dp" android:paddingEnd="12dp"
-        android:paddingTop="6dp" android:paddingBottom="6dp"
-        android:textSize="12sp"
-        android:textColor="@color/text_primary"/>
-    </LinearLayout>
-
-    <!-- Map Placeholder -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.baidu.mapapi.map.MapView
-            android:id="@+id/mapView"
+        <!-- Map Placeholder -->
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_margin="16dp"/>
+            android:layout_height="wrap_content">
 
-        <!-- 地图上的叠加控件（如数字标记1/2/3） -->
-    </RelativeLayout>
+            <com.baidu.mapapi.map.MapView
+                android:id="@+id/mapView"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_margin="16dp"/>
 
-    <!-- Itinerary Title -->
+            <!-- 地图上的叠加控件（如数字标记1/2/3） -->
+        </RelativeLayout>
+
+        <!-- Itinerary Title -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_marginBottom="8dp">
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_location_pin"
+            app:tint="@color/color_primary"
+            android:layout_marginEnd="8dp"/>
+        <TextView
+            android:id="@+id/tvMainItineraryTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="重庆3天2晚"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"/>
+        </LinearLayout>
+
+        <!-- Day Itinerary RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewDayPlans"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_day_plan"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:clipToPadding="false"/>
+
+        <!-- Attraction Details Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardAttractionDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/surface">
+
+            <!-- 使用水平 LinearLayout 实现图片在左，文字在右 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <!-- 左侧图片 -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginEnd="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@android:color/transparent">
+
+                <ImageView
+                    android:id="@+id/ivAttractionImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@android:drawable/sym_def_app_icon"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="Attraction Image"/>
+            </androidx.cardview.widget.CardView>
+
+                <!-- 右侧文字信息容器 -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvAttractionName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="洪崖洞"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginBottom="4dp"/>
+
+                    <TextView
+                        android:id="@+id/tvAttractionAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="重庆市渝中区沧白路88号"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginBottom="8dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_star"
+                            app:tint="@color/text_secondary"
+                            android:layout_marginEnd="4dp"/>
+                        <TextView
+                            android:id="@+id/tvAttractionStarRate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="4.7"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginEnd="12dp"/> <!-- 增加间距 -->
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_money"
+                            app:tint="@color/text_secondary"
+                            android:layout_marginEnd="4dp"/>
+                        <TextView
+                            android:id="@+id/tvAttractionFee"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="免费"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvAttractionDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="洪崖洞民俗风貌区是逛山城老街、观赏两江风光、品尝当地美食的好去处。"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_secondary"
+                        android:lineSpacingExtra="3dp"/>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Suggestions Section -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -169,289 +321,144 @@
     <ImageView
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:src="@drawable/ic_location_pin"
+        android:src="@drawable/ic_inspiration"
         app:tint="@color/color_primary"
         android:layout_marginEnd="8dp"/>
     <TextView
-        android:id="@+id/tvMainItineraryTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="重庆3天2晚"
+        android:text="建议"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/text_primary"/>
     </LinearLayout>
 
-    <!-- Day Itinerary RecyclerView -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewDayPlans"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_day_plan"
         android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:clipToPadding="false"/>
+        android:paddingEnd="8dp">
 
-    <!-- Attraction Details Card -->
+    <!-- Recommended Restaurant Card -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardAttractionDetail"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
+        android:layout_weight="1"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="2dp"
         app:cardBackgroundColor="@color/surface">
-
-        <!-- 使用水平 LinearLayout 实现图片在左，文字在右 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:padding="12dp">
-
-            <!-- 左侧图片 -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginEnd="16dp"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="0dp"
-            app:cardBackgroundColor="@android:color/transparent">
-
-            <ImageView
-                android:id="@+id/ivAttractionImage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@android:drawable/sym_def_app_icon"
-                android:scaleType="centerCrop"
-                android:contentDescription="Attraction Image"/>
-        </androidx.cardview.widget.CardView>
-
-            <!-- 右侧文字信息容器 -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_restaurant_menu"
+                    app:tint="@color/color_primary"
+                    android:layout_marginEnd="8dp"/>
                 <TextView
-                    android:id="@+id/tvAttractionName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="洪崖洞"
-                    android:textSize="18sp"
+                    android:text="推荐餐厅"
                     android:textStyle="bold"
-                    android:textColor="@color/text_primary"
-                    android:layout_marginBottom="4dp"/>
-
-                <TextView
-                    android:id="@+id/tvAttractionAddress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="重庆市渝中区沧白路88号"
-                    android:textSize="13sp"
-                    android:textColor="@color/text_secondary"
-                    android:layout_marginBottom="8dp"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="8dp">
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:src="@drawable/ic_star"
-                        app:tint="@color/text_secondary"
-                        android:layout_marginEnd="4dp"/>
-                    <TextView
-                        android:id="@+id/tvAttractionStarRate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="4.7"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginEnd="12dp"/> <!-- 增加间距 -->
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:src="@drawable/ic_money"
-                        app:tint="@color/text_secondary"
-                        android:layout_marginEnd="4dp"/>
-                    <TextView
-                        android:id="@+id/tvAttractionFee"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="免费"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_secondary"/>
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tvAttractionDescription"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="洪崖洞民俗风貌区是逛山城老街、观赏两江风光、品尝当地美食的好去处。"
-                    android:textSize="12sp"
-                    android:textColor="@color/text_secondary"
-                    android:lineSpacingExtra="3dp"/>
+                    android:textSize="14sp"
+                    android:textColor="@color/text_primary"/>
             </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="洪崖洞附近的老火锅店"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Suggestions Section -->
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
-    android:layout_marginBottom="8dp">
-<ImageView
-    android:layout_width="24dp"
-    android:layout_height="24dp"
-    android:src="@drawable/ic_inspiration"
-    app:tint="@color/color_primary"
-    android:layout_marginEnd="8dp"/>
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="建议"
-    android:textSize="18sp"
-    android:textStyle="bold"
-    android:textColor="@color/text_primary"/>
-</LinearLayout>
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingStart="8dp"
-    android:paddingEnd="8dp">
-
-<!-- Recommended Restaurant Card -->
-<androidx.cardview.widget.CardView
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_weight="1"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="10dp"
-    app:cardElevation="2dp"
-    app:cardBackgroundColor="@color/surface">
-    <LinearLayout
-        android:layout_width="match_parent"
+    <!-- Accommodation Recommendation Card -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="12dp">
+        android:layout_weight="1"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="@color/surface">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="4dp">
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_restaurant_menu"
-                app:tint="@color/color_primary"
-                android:layout_marginEnd="8dp"/>
+            android:orientation="vertical"
+            android:padding="12dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_hotel"
+                    app:tint="@color/color_primary"
+                    android:layout_marginEnd="8dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="住宿推荐"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_primary"/>
+            </LinearLayout>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="推荐餐厅"
-                android:textStyle="bold"
-                android:textSize="14sp"
-                android:textColor="@color/text_primary"/>
+                android:text="解放碑商圈酒店"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"/>
         </LinearLayout>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="洪崖洞附近的老火锅店"
-            android:textSize="12sp"
-            android:textColor="@color/text_secondary"/>
+    </androidx.cardview.widget.CardView>
     </LinearLayout>
-</androidx.cardview.widget.CardView>
 
-<!-- Accommodation Recommendation Card -->
-<androidx.cardview.widget.CardView
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_weight="1"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="10dp"
-    app:cardElevation="2dp"
-    app:cardBackgroundColor="@color/surface">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="12dp">
-        <LinearLayout
+        </LinearLayout>
+        </ScrollView>
+
+        <!-- 全屏加载指示器 -->
+        <FrameLayout
+            android:id="@+id/loading_overlay"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="4dp">
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_hotel"
-                app:tint="@color/color_primary"
-                android:layout_marginEnd="8dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="住宿推荐"
-                android:textStyle="bold"
-                android:textSize="14sp"
-                android:textColor="@color/text_primary"/>
-        </LinearLayout>
-        <TextView
+            android:layout_height="match_parent"
+            android:background="#80FFFFFF"
+            android:visibility="visible"
+            android:clickable="true"
+            android:focusable="true">
+
+        <ProgressBar
+            android:id="@+id/routes_progress_bar"
+            style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="解放碑商圈酒店"
-            android:textSize="12sp"
-            android:textColor="@color/text_secondary"/>
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
-</LinearLayout>
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/color_primary"/>
 
-    </LinearLayout>
-    </ScrollView>
+        <TextView
+            android:id="@+id/loading_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="96dp"
+            android:text="正在规划您的专属行程...\n这可能需要大约1-3分钟..."
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:lineSpacingMultiplier="1.2"/>
 
-    <!-- 全屏加载指示器 -->
-    <FrameLayout
-        android:id="@+id/loading_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#80FFFFFF"
-        android:visibility="visible"
-        android:clickable="true"
-        android:focusable="true">
-
-    <ProgressBar
-        android:id="@+id/routes_progress_bar"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:indeterminate="true"
-        android:indeterminateTint="@color/color_primary"/>
-
-    <TextView
-        android:id="@+id/loading_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="96dp"
-        android:text="正在规划您的专属行程...\n这可能需要大约1-3分钟..."
-        android:textColor="@color/text_primary"
-        android:textSize="16sp"
-        android:lineSpacingMultiplier="1.2"/>
-
-</FrameLayout>
+    </FrameLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

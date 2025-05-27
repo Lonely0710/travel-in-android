@@ -1,0 +1,34 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@android:color/white"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
+
+    <ImageView
+        android:id="@+id/iv_slogan"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:contentDescription="logo"
+        android:src="@drawable/ic_slogan" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="Title"
+        android:textColor="@android:color/black"
+        android:textSize="22sp"
+        android:fontFamily="@font/pacifico" />
+
+    <!-- 添加右侧占位，使标题真正居中 -->
+    <View
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:visibility="invisible" />
+
+</LinearLayout>

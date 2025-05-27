@@ -24,24 +24,6 @@ public class DiscoverFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_discover, container, false);
-        // 通过id绑定“探索”按钮
-        TextView tvExplore = view.findViewById(R.id.tv_explore);
-        tvExplore.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, new ExploreFragment())
-                .addToBackStack(null)
-                .commit();
-        });
-        // 新增：VR按钮跳转
-        TextView tvVR = view.findViewById(R.id.tv_vr);
-        tvVR.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, new VRFragment())
-                .addToBackStack(null)
-                .commit();
-        });
         recyclerView = view.findViewById(R.id.rv_post_history);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         // 这里直接填充演示内容

@@ -3,39 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- 左上角“探索”按钮，置于最上层 -->
-    <TextView
-        android:id="@+id/tv_explore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="探索"
-        android:textSize="18sp"
-        android:textColor="@color/black"
-        android:paddingLeft="16dp"
-        android:paddingTop="16dp"
-        android:background="@android:color/transparent"
-        android:clickable="true"
-        android:focusable="true"
-        android:layout_gravity="start|top"
-        android:elevation="8dp"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_post_history"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:layout_marginTop="40dp"/>
 
-    <!-- 右上角VR按钮 -->
-    <TextView
-        android:id="@+id/tv_vr"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="VR"
-        android:textSize="18sp"
-        android:textColor="@color/black"
-        android:paddingRight="16dp"
-        android:paddingTop="16dp"
-        android:background="@android:color/transparent"
-        android:clickable="true"
-        android:focusable="true"
-        android:layout_gravity="end|top"
-        android:elevation="8dp"/>
-
-    <!-- 新增“我要发帖”按钮，右下角悬浮 -->
     <Button
         android:id="@+id/btn_post"
         android:layout_width="wrap_content"
@@ -47,13 +21,6 @@
         android:backgroundTint="@color/color_primary"
         android:textColor="@android:color/white"
         android:elevation="8dp"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_post_history"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"
-        android:layout_marginTop="40dp"/>
 
 </FrameLayout>
 

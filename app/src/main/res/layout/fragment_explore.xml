@@ -1,263 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/background">
-
     <!-- Top Bar -->
-    <com.google.android.material.appbar.AppBarLayout
+    <include
+        layout="@layout/topbar_home_explore_routes"
+        android:id="@+id/topbar_explore"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/color_primary">
-
-        <LinearLayout
-            android:id="@+id/top_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:gravity="center_vertical">
-
-            <!-- 1. 把这个子布局宽度改成 0dp，权重设为 1 -->
-            <LinearLayout
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:src="@drawable/ic_location"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="6dp"/>
-
-                <TextView
-                    android:id="@+id/tv_current_location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="定位中..."
-                    android:fontFamily="@font/fangzheng"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"/>
-            </LinearLayout>
-
-            <!-- 2. 右侧按钮保持 wrap_content，就会被推到最右 -->
-            <TextView
-                android:id="@+id/tv_discover"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="发现"
-                android:textSize="20sp"
-                android:textColor="@color/black"
-                android:gravity="center_vertical"
-                android:clickable="true"
-                android:focusable="true"/>
-        </LinearLayout>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <FrameLayout
-        android:id="@+id/explore_content_container"
+        android:layout_height="wrap_content" />
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_explore"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="50dp">
-
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:background="@color/background">
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:layout_marginTop="4dp">
-                <!-- Search Bar -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    app:cardCornerRadius="24dp"
-                    app:cardElevation="2dp">
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                        <EditText
-                            android:id="@+id/et_search"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_toStartOf="@+id/btn_confirm"
-                            android:hint="搜索目的地、景点、活动"
-                            android:paddingStart="16dp"
-                            android:background="@android:color/transparent"
-                            android:imeOptions="actionSearch"/>
-                        <ImageButton
-                            android:id="@+id/btn_confirm"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:padding="2dp"
-                            android:background="@android:color/transparent"
-                            android:src="@drawable/ic_search"
-                            android:contentDescription="确认搜索"/>
-                    </RelativeLayout>
-                </androidx.cardview.widget.CardView>
-                <!-- Hot & Popular Section -->
-                <TextView
-                    android:layout_marginTop="16dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="中外热门景点推荐"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_hot_spots"
-                    android:layout_width="match_parent"
-                    android:layout_height="210dp"
-                    android:overScrollMode="never"
-                    android:layout_marginTop="8dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-                <!-- Category Tags -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp">
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_hot"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:checked="true"
-                        android:text="热门"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textAlignment="center"
-                        android:paddingStart="0dp"
-                        android:paddingEnd="0dp"
-                        android:textColor="@android:color/black"
-                        app:chipIcon="@drawable/ic_fire"
-                        app:chipIconVisible="true"/>
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_adventure"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:text="探险"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textAlignment="center"
-                        android:paddingStart="0dp"
-                        android:paddingEnd="0dp"
-                        android:layout_marginStart="8dp"
-                        android:textColor="@android:color/black"
-                        app:chipIcon="@drawable/ic_adventure"
-                        app:chipIconVisible="true"/>
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_relax"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:text="放松"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textAlignment="center"
-                        android:paddingStart="0dp"
-                        android:paddingEnd="0dp"
-                        android:layout_marginStart="8dp"
-                        android:textColor="@android:color/black"
-                        app:chipIcon="@drawable/ic_relax"
-                        app:chipIconVisible="true"/>
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_culture"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:text="文化"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textAlignment="center"
-                        android:paddingStart="0dp"
-                        android:paddingEnd="0dp"
-                        android:layout_marginStart="8dp"
-                        android:textColor="@android:color/black"
-                        app:chipIcon="@drawable/ic_culture"
-                        app:chipIconVisible="true"/>
-                </LinearLayout>
-                <!-- 推荐区 -->
-                <LinearLayout
-                    android:id="@+id/layout_recommended_block"
-                    android:layout_width="match_parent"
-                    android:layout_height="307dp"
-                    android:layout_marginTop="0dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/white"
-                    android:orientation="vertical"
-                    android:padding="0dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginTop="12dp"
-                        android:text="推荐景点"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_recommended"
-                        android:layout_width="match_parent"
-                        android:layout_height="240dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:overScrollMode="always"
-                        android:scrollbars="vertical"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-                    <ProgressBar
-                        android:id="@+id/progress_recommended"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="6dp"
-                        android:layout_marginTop="4dp"
-                        android:indeterminate="true"
-                        android:visibility="gone" />
-                </LinearLayout>
-                <!-- 附近景点区 -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="离你最近"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-                <LinearLayout
-                    android:id="@+id/layout_nearby_spots"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
-                    <FrameLayout
-                        android:id="@+id/nearby_spot_left"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="4dp" />
-                    <FrameLayout
-                        android:id="@+id/nearby_spot_right"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="4dp" />
-                </LinearLayout>
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-    </FrameLayout>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        android:layout_height="44dp"
+        android:background="@android:color/white"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/color_primary"
+        app:tabIndicatorHeight="3dp"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/color_primary"
+        app:tabTextColor="@color/gray" />
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewpager_explore"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+</LinearLayout>
