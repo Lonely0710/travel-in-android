@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -7,20 +8,22 @@
         android:id="@+id/rv_post_history"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
-        android:layout_marginTop="40dp"/>
+        android:padding="16dp"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/btn_post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="我要发帖"
-        android:textSize="16sp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:src="@drawable/ic_write_post"
+        android:background="@drawable/bg_circular_button"
         android:layout_gravity="end|bottom"
         android:layout_margin="24dp"
-        android:backgroundTint="@color/color_primary"
-        android:textColor="@android:color/white"
-        android:elevation="8dp"/>
+        android:elevation="8dp"
+        android:padding="16dp"
+        android:contentDescription="发帖"
+        android:scaleType="fitCenter"
+        android:tint="@android:color/white"
+        tools:ignore="UseAppTint" />
 
 </FrameLayout>
 

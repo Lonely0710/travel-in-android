@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,7 +36,7 @@ public class DiscoverFragment extends Fragment {
         adapter = new PostHistoryAdapter(postList);
         recyclerView.setAdapter(adapter);
         // 新增：我要发帖按钮跳转
-        Button btnPost = view.findViewById(R.id.btn_post);
+        ImageButton btnPost = view.findViewById(R.id.btn_post);
         btnPost.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager()
                 .beginTransaction()
