@@ -18,7 +18,7 @@ import okhttp3.Response;
 public class DeepSeekApiClient {
 
     private static final String TAG = "DeepSeekApiClient";
-    private static String API_KEY = "sk-f17f024b030445a9b74d5e987567f80d";
+    private static String API_KEY = null;
     private static final String API_URL = "https://api.deepseek.com/chat/completions";
     private static final String MODEL_NAME = "deepseek-chat";
 

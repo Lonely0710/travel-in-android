@@ -15,8 +15,9 @@ import com.bjtu.traveler.utils.DeepSeekApiClient;
  */
 public class TravelerApplication extends Application {
     private static final String TAG = "TravelerApplication";
-    private static final String DEEPSEEK_API_KEY = "sk-f17f024b030445a9b74d5e987567f80d";
     public static LottieComposition chatLottieComposition;
+    public static String BAIDU_LBS_API_KEY = null;
+    public static String DEEPSEEK_API_KEY = null;
 
     @Override
     public void onCreate() {
@@ -24,14 +25,26 @@ public class TravelerApplication extends Application {
         // 初始化Bmob
         BmobUtils.initialize(this);
 
+        // === 读取secrets.properties中的API密钥 ===
+        try {
+            java.util.Properties properties = new java.util.Properties();
+            java.io.InputStream inputStream = getAssets().open("secrets.properties");
+            properties.load(inputStream);
+            BAIDU_LBS_API_KEY = properties.getProperty("BAIDU_LBS_API_KEY");
+            DEEPSEEK_API_KEY = properties.getProperty("DEEPSEEK_API_KEY");
+            inputStream.close();
+        } catch (Exception e) {
+            Log.e(TAG, "读取secrets.properties失败: " + e.getMessage(), e);
+        }
+
         // 在应用创建时初始化百度地图SDK
         SDKInitializer.setAgreePrivacy(this, true); // 必须设置隐私合规
         SDKInitializer.initialize(this);
         SDKInitializer.setCoordType(CoordType.BD09LL); // 设置坐标类型
 
         // DeepSeek API 初始化
-        if (!DEEPSEEK_API_KEY.startsWith("sk-")) {
-            Log.e(TAG, "请在 TravelerApplication.java 中设置您的 DEEPSEEK_API_KEY！");
+        if (DEEPSEEK_API_KEY == null || !DEEPSEEK_API_KEY.startsWith("sk-")) {
+            Log.e(TAG, "请在 assets/secrets.properties 中设置您的 DEEPSEEK_API_KEY！");
         } else {
             DeepSeekApiClient.init(DEEPSEEK_API_KEY);
             Log.d(TAG, "DeepSeek API Client initialized.");
@@ -49,5 +62,18 @@ public class TravelerApplication extends Application {
                     // 加载失败时，记录错误
                     Log.e(TAG, "Failed to pre-load Lottie animation (mapping_man): " + throwable.getMessage(), throwable);
                 });
+
+        // === 动态设置百度API Key到meta-data ===
+        if (BAIDU_LBS_API_KEY != null && !BAIDU_LBS_API_KEY.isEmpty()) {
+            try {
+                android.content.pm.ApplicationInfo appInfo = getPackageManager().getApplicationInfo(getPackageName(), android.content.pm.PackageManager.GET_META_DATA);
+                if (appInfo.metaData != null) {
+                    appInfo.metaData.putString("com.baidu.lbsapi.API_KEY", BAIDU_LBS_API_KEY);
+                    Log.d(TAG, "百度API Key已动态注入meta-data: " + BAIDU_LBS_API_KEY);
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "动态注入百度API Key失败: " + e.getMessage(), e);
+            }
+        }
     }
 } 
