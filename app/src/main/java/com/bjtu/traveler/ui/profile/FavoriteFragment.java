@@ -31,9 +31,9 @@ public class FavoriteFragment extends Fragment {
         AttractionAdapter adapter = new AttractionAdapter(favoriteList, R.layout.item_vertical_attraction);
         adapter.setOnAttractionClickListener((attraction, imgUrl, city, country) -> {
             AttractionDetailFragment fragment = AttractionDetailFragment.newInstance(
-                    attraction.name,
-                    attraction.category,
-                    attraction.description,
+                    attraction.getName(),
+                    attraction.getCategory(),
+                    attraction.getDescription(),
                     city,
                     country,
                     imgUrl

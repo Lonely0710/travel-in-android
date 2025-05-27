@@ -182,8 +182,8 @@ public class OverpassApi {
                 }
                 // 按距离排序
                 list.sort((a, b) -> {
-                    double da = Math.pow(a.lat - lat, 2) + Math.pow(a.lon - lon, 2);
-                    double db = Math.pow(b.lat - lat, 2) + Math.pow(b.lon - lon, 2);
+                    double da = Math.pow(a.getLat() - lat, 2) + Math.pow(a.getLon() - lon, 2);
+                    double db = Math.pow(b.getLat() - lat, 2) + Math.pow(b.getLon() - lon, 2);
                     return Double.compare(da, db);
                 });
                 // 只取最近limit个

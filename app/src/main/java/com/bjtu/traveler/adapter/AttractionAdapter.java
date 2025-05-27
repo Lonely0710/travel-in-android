@@ -66,9 +66,9 @@ public class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Attraction a = data.get(position);
         if (layoutResId == R.layout.item_horizontal_attraction) {
-            if (holder.tvName != null) holder.tvName.setText(a.name);
+            if (holder.tvName != null) holder.tvName.setText(a.getName());
             if (holder.tvCategory != null)
-                holder.tvCategory.setText(a.category != null ? a.category : "");
+                holder.tvCategory.setText(a.getCategory() != null ? a.getCategory() : "");
             if (holder.imgAttraction != null)
                 loadAttractionImage(holder.itemView.getContext(), a, holder.imgAttraction);
             // 横向item整体点击跳转到详情页（Fragment跳转）
@@ -79,13 +79,13 @@ public class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.Vi
                 }
             });
         } else if (layoutResId == R.layout.item_vertical_attraction) {
-            if (holder.tvTitle != null) holder.tvTitle.setText(a.name);
+            if (holder.tvTitle != null) holder.tvTitle.setText(a.getName());
             if (holder.tvSubCategory != null)
-                holder.tvSubCategory.setText(a.category != null ? a.category : "");
+                holder.tvSubCategory.setText(a.getCategory() != null ? a.getCategory() : "");
             // 位置
             TextView tvLocation = holder.itemView.findViewById(R.id.tvLocation);
-            String cityToShow = a.city != null ? a.city : "";
-            String countryToShow = a.country != null ? a.country : "";
+            String cityToShow = a.getCity() != null ? a.getCity() : "";
+            String countryToShow = a.getCountry() != null ? a.getCountry() : "";
             StringBuilder locationBuilder = new StringBuilder();
             if (!cityToShow.isEmpty()) locationBuilder.append(cityToShow);
             if (!countryToShow.isEmpty()) {
@@ -116,8 +116,8 @@ public class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.Vi
 
     // 获取景点图片URL（优先用Attraction.url，无则查百科，查到后缓存）
     private void loadAttractionImage(Context context, Attraction attraction, ImageView imageView) {
-        String cacheKey = attraction.name;
-        String url = attraction.url;
+        String cacheKey = attraction.getName();
+        String url = attraction.getUrl();
         if (!TextUtils.isEmpty(url)) {
             Glide.with(context).load(url).into(imageView);
             imageView.setTag(url);
@@ -129,12 +129,12 @@ public class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.Vi
             imageView.setTag(cachedUrl);
             return;
         }
-        WikipediaApi.fetchAttractionInfo(attraction.name, new WikipediaApi.Callback() {
+        WikipediaApi.fetchAttractionInfo(attraction.getName(), new WikipediaApi.Callback() {
             @Override
             public void onSuccess(String desc, String wikiImgUrl) {
                 if (!TextUtils.isEmpty(wikiImgUrl)) {
                     imageUrlCache.put(cacheKey, wikiImgUrl);
-                    attraction.url = wikiImgUrl;
+                    attraction.setUrl(wikiImgUrl);
                     Glide.with(context).load(wikiImgUrl).into(imageView);
                     imageView.setTag(wikiImgUrl);
                 } else {

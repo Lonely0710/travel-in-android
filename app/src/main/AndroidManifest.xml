@@ -38,7 +38,7 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="ATGR8aZGPyUVcOH2jBEBqFjevD5vCaGH" />
+            android:value="BAIDU_LBS_API_KEY_PLACEHOLDER" />
 
         <activity android:name=".SplashActivity"
             android:exported="true"

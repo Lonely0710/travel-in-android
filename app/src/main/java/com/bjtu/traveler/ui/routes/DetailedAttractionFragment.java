@@ -10,7 +10,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageView; // 不需要 Glide 了，如果直接用 drawable
+import android.widget.ImageView; 
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +22,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.bjtu.traveler.R;
-// import com.bumptech.glide.Glide; // 如果logo是本地drawable，就不需要Glide了
 
 public class DetailedAttractionFragment extends Fragment {
 

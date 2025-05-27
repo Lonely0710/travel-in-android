@@ -48,6 +48,8 @@ import java.util.concurrent.CompletableFuture;
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import com.bjtu.traveler.data.model.BmobPlan;
+import com.bjtu.traveler.data.model.Attraction;
 
 public class RoutesFragment extends Fragment {
 
@@ -353,7 +355,7 @@ public class RoutesFragment extends Fragment {
                         }
                         tvAttractionDescription.setText(desc);
                     } else {
-                        tvAttractionDescription.setText("有人说这里很美？不，亲眼所见才是‘哇塞’级体验！");
+                        tvAttractionDescription.setText("有人说这里很美？不，亲眼所见才是'哇塞'级体验！");
                     }
 
                     // Glide 加载图片
@@ -433,86 +435,6 @@ public class RoutesFragment extends Fragment {
                 .addToBackStack(null)
                 .commit();
     }
-
-    // Bmob 存储的类
-    public static class BmobPlan extends BmobObject {
-        private String destination;
-        private int days;
-        private int budget;
-        private List<String> preferences; // 保持为 List<String>
-        private String rawDestinationInput;
-        private String rawDaysInput;
-        private String rawBudgetInput;
-        private String rawPreferencesInput;
-        private String plannedDetailsJson; // 存储 List<DayPlan> 的 JSON 字符串
-
-        public String getDestination() { return destination; }
-        public void setDestination(String destination) { this.destination = destination; }
-        public int getDays() { return days; }
-        public void setDays(int days) { this.days = days; }
-        public int getBudget() { return budget; }
-        public void setBudget(int budget) { this.budget = budget; }
-        public List<String> getPreferences() { return preferences; }
-        public void setPreferences(List<String> preferences) { this.preferences = preferences; }
-        public String getRawDestinationInput() { return rawDestinationInput; }
-        public void setRawDestinationInput(String rawDestinationInput) { this.rawDestinationInput = rawDestinationInput; }
-        public String getRawDaysInput() { return rawDaysInput; }
-        public void setRawDaysInput(String rawDaysInput) { this.rawDaysInput = rawDaysInput; }
-        public String getRawBudgetInput() { return rawBudgetInput; }
-        public void setRawBudgetInput(String rawBudgetInput) { this.rawBudgetInput = rawBudgetInput; }
-        public String getRawPreferencesInput() { return rawPreferencesInput; }
-        public void setRawPreferencesInput(String rawPreferencesInput) { this.rawPreferencesInput = rawPreferencesInput; }
-        public String getPlannedDetailsJson() { return plannedDetailsJson; }
-        public void setPlannedDetailsJson(String plannedDetailsJson) { this.plannedDetailsJson = plannedDetailsJson; }
-    }
-
-
-    // Attraction 类，用于解析 DayPlan 中存储的活动JSON字符串
-    // 它的字段与 PlaceScraper.Destination 和 DeepSeek API 的 systemPrompt 中的景点结构一致
-    public static class Attraction implements Serializable {
-        @SerializedName("name")
-        private String name;
-        @SerializedName("description")
-        private String description;
-        @SerializedName("addressDistance")
-        private String address;
-        @SerializedName("price")
-        private int price;
-        @SerializedName("detailPageUrl")
-        private String detailPageUrl;
-        @SerializedName("businessId")
-        private String businessId;
-        @SerializedName("commentScore")
-        private String commentScore;
-        @SerializedName("sightLevel")
-        private String sightLevel;
-        @SerializedName("coverImageUrl")
-        private String coverImageUrl;
-        @SerializedName("tagNames")
-        private List<String> tagNames;
-        @SerializedName("latitude")
-        private double latitude;
-        @SerializedName("longitude")
-        private double longitude;
-        @SerializedName("heatScore")
-        private double heatScore;
-
-        // Getters
-        public String getName() { return name; }
-        public String getDescription() { return description; }
-        public String getAddress() { return address; }
-        public int getPrice() { return price; }
-        public String getDetailPageUrl() { return detailPageUrl; }
-        public String getBusinessId() { return businessId; }
-        public String getCommentScore() { return commentScore; }
-        public String getSightLevel() { return sightLevel; }
-        public String getCoverImageUrl() { return coverImageUrl; }
-        public List<String> getTagNames() { return tagNames; }
-        public double getLatitude() { return latitude; }
-        public double getLongitude() { return longitude; }
-        public double getHeatScore() { return heatScore; }
-    }
-
 
     @Override
     public void onResume() {

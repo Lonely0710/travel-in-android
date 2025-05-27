@@ -120,7 +120,7 @@ public class ExploreFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_explore, container, false);
-        // 添加“发现”按钮，右上角
+        // 添加"发现"按钮，右上角
         TextView tvDiscover = view.findViewById(R.id.tv_discover);
         tvDiscover.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager()
@@ -173,12 +173,12 @@ public class ExploreFragment extends Fragment {
         // 设置点击事件，跳转到详情Fragment
         recommendedAdapter.setOnAttractionClickListener((attraction, imgUrl, city, country) -> {
             Bundle args = new Bundle();
-            args.putString("name", attraction.name);
-            args.putString("category", attraction.category);
-            args.putString("description", attraction.description);
+            args.putString("name", attraction.getName());
+            args.putString("category", attraction.getCategory());
+            args.putString("description", attraction.getDescription());
             // 传递景点自身的city和country字段
-            args.putString("city", attraction.city);
-            args.putString("country", attraction.country);
+            args.putString("city", attraction.getCity());
+            args.putString("country", attraction.getCountry());
             args.putString("imgUrl", imgUrl);
             // 记录当前chip类型
             args.putString("chipType", getCurrentChipType());
@@ -199,9 +199,9 @@ public class ExploreFragment extends Fragment {
         // 热门区点击事件，跳转到详情Fragment
         hotAdapter.setOnAttractionClickListener((attraction, imgUrl, city, country) -> {
             Bundle args = new Bundle();
-            args.putString("name", attraction.name);
-            args.putString("category", attraction.category);
-            args.putString("description", attraction.description);
+            args.putString("name", attraction.getName());
+            args.putString("category", attraction.getCategory());
+            args.putString("description", attraction.getDescription());
             // 传递查询用城市city
             args.putString("city", city);
             args.putString("country", country);
@@ -259,8 +259,8 @@ public class ExploreFragment extends Fragment {
                             synchronized (allResults) {
                                 // 修正：为每个景点设置city为keyword，country为当前currentCountry（如有）
                                 for (com.bjtu.traveler.data.model.Attraction a : attractions) {
-                                    a.city = keyword;
-                                    a.country = currentCountry != null ? currentCountry : "";
+                                    a.setCity(keyword);
+                                    a.setCountry(currentCountry != null ? currentCountry : "");
                                 }
                                 allResults.addAll(attractions);
                             }
@@ -540,10 +540,10 @@ public class ExploreFragment extends Fragment {
                             int canAdd = Math.min(MAX_CACHE_SIZE - allAttractions.size(), attractions.size());
                             for (int i = 0; i < canAdd; i++) {
                                 Attraction a = attractions.get(i);
-                                a.city = city;
+                                a.setCity(city);
                                 // 过滤掉hotel、hostel、information
-                                if (a.category == null) continue;
-                                String cat = a.category.trim().toLowerCase();
+                                if (a.getCategory() == null) continue;
+                                String cat = a.getCategory().trim().toLowerCase();
                                 if (cat.equals("hotel") || cat.equals("hostel") || cat.equals("information")) continue;
                                 allAttractions.add(a);
                             }
@@ -576,8 +576,8 @@ public class ExploreFragment extends Fragment {
         // 过滤掉hotel、hostel、information（忽略大小写和前后空格）
         List<Attraction> filteredHotAllList = new ArrayList<>();
         for (Attraction a : hotAllList) {
-            if (a.category == null) continue;
-            String cat = a.category.trim().toLowerCase();
+            if (a.getCategory() == null) continue;
+            String cat = a.getCategory().trim().toLowerCase();
             if (cat.equals("hotel") || cat.equals("hostel") || cat.equals("information")) continue;
             filteredHotAllList.add(a);
         }
@@ -672,8 +672,8 @@ public class ExploreFragment extends Fragment {
                         if (attractions != null && !attractions.isEmpty()) {
                             synchronized (all) {
                                 for (Attraction a : attractions) {
-                                    if (a.category == null || !a.category.equalsIgnoreCase(cat)) continue;
-                                    a.city = city;
+                                    if (a.getCategory() == null || !a.getCategory().equalsIgnoreCase(cat)) continue;
+                                    a.setCity(city);
                                     all.add(a);
                                     updated = true;
                                 }
@@ -751,8 +751,8 @@ public class ExploreFragment extends Fragment {
         List<Attraction> filtered = new ArrayList<>();
         if (attractions != null) {
             for (Attraction a : attractions) {
-                if (a.category == null) continue;
-                String cat = a.category.trim().toLowerCase();
+                if (a.getCategory() == null) continue;
+                String cat = a.getCategory().trim().toLowerCase();
                 if (cat.equals("hotel") || cat.equals("hostel") || cat.equals("information")) continue;
                 filtered.add(a);
             }
@@ -789,9 +789,9 @@ public class ExploreFragment extends Fragment {
         TextView tvName = v.findViewById(R.id.text_place_name);
         TextView tvDistance = v.findViewById(R.id.text_distance);
         ImageView imgPlace = v.findViewById(R.id.image_place);
-        tvName.setText(attraction.name);
+        tvName.setText(attraction.getName());
         // 计算距离
-        double distance = calcDistance(userLat, userLon, attraction.lat, attraction.lon);
+        double distance = calcDistance(userLat, userLon, attraction.getLat(), attraction.getLon());
         String distStr = distance < 1 ? String.format("距离 %.0f m", distance * 1000) : String.format("距离 %.1f km", distance);
         tvDistance.setText(distStr);
         // 加载图片，优先用attraction.url，无则查百科
@@ -814,12 +814,12 @@ public class ExploreFragment extends Fragment {
         //                 imgPlace.setImageResource(R.drawable.exam3);
         v.setOnClickListener(view -> {
             Bundle args = new Bundle();
-            args.putString("name", attraction.name);
-            args.putString("category", attraction.category);
-            args.putString("description", attraction.description);
-            args.putString("city", attraction.city);
-            args.putString("country", attraction.country);
-            args.putString("imgUrl", attraction.url);
+            args.putString("name", attraction.getName());
+            args.putString("category", attraction.getCategory());
+            args.putString("description", attraction.getDescription());
+            args.putString("city", attraction.getCity());
+            args.putString("country", attraction.getCountry());
+            args.putString("imgUrl", attraction.getUrl());
             AttractionDetailFragment fragment = new AttractionDetailFragment();
             fragment.setArguments(args);
             requireActivity().getSupportFragmentManager()

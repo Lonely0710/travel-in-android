@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bjtu.traveler.R;
 import com.bjtu.traveler.data.model.DayPlan; // 使用您的 DayPlan 类
+import com.bjtu.traveler.data.model.Attraction;
 import com.bjtu.traveler.ui.routes.RoutesFragment; // 用于内部 Attraction 模型
 
 // Gson for parsing the JSON string within DayPlan activity fields
@@ -69,7 +70,7 @@ public class DayPlanAdapter extends RecyclerView.Adapter<DayPlanAdapter.DayPlanV
         } else {
             try {
                 // 解析 JSON 字符串为 Attraction 对象
-                RoutesFragment.Attraction attraction = gson.fromJson(activityJson, RoutesFragment.Attraction.class);
+                Attraction attraction = gson.fromJson(activityJson, Attraction.class);
                 if (attraction != null && !TextUtils.isEmpty(attraction.getName())) {
                     tvActivity.setText(attraction.getName());
                     ivIcon.setImageResource(getIconResourceForType(iconType)); // 使用AI建议的图标类型或根据景点名称/标签
