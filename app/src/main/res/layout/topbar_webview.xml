@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/topbar_webview"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@android:color/white"
+    android:elevation="4dp">
+
+    <!-- 返回按钮 -->
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="match_parent"
+        android:scaleType="centerInside"
+        android:padding="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:srcCompat="@drawable/ic_arrow_left"
+        android:contentDescription="返回至上一页" />
+
+    <!-- 网站关键字图标 -->
+    <ImageView
+        android:id="@+id/iv_title_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_weight="1" />
+
+    <!-- 右侧占位符，宽度与左侧返回按钮相同 -->
+    <View
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="match_parent"/>
+
+</LinearLayout> 

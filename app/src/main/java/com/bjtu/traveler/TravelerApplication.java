@@ -9,21 +9,26 @@ import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 import com.bjtu.traveler.utils.BmobUtils;
 import com.bjtu.traveler.utils.DeepSeekApiClient;
+import com.bjtu.traveler.data.cache.CityCache;
 
 /**
- * 应用级别的Application类，用于初始化Bmob SDK
+ * 应用级别的Application类，用于进行应用全局的初始化工作
  */
 public class TravelerApplication extends Application {
     private static final String TAG = "TravelerApplication";
     public static LottieComposition chatLottieComposition;
     public static String BAIDU_LBS_API_KEY = null;
     public static String DEEPSEEK_API_KEY = null;
+    public static String UNSPLASH_ACCESS_KEY = null; // 添加静态变量用于存储 Unsplash Access Key
 
     @Override
     public void onCreate() {
         super.onCreate();
         // 初始化Bmob
         BmobUtils.initialize(this);
+
+        // === 初始化 CityCache ===
+        CityCache.initialize(this);
 
         // === 读取secrets.properties中的API密钥 ===
         try {
@@ -32,6 +37,7 @@ public class TravelerApplication extends Application {
             properties.load(inputStream);
             BAIDU_LBS_API_KEY = properties.getProperty("BAIDU_LBS_API_KEY");
             DEEPSEEK_API_KEY = properties.getProperty("DEEPSEEK_API_KEY");
+            UNSPLASH_ACCESS_KEY = properties.getProperty("UNSPLASH_ACCESS_KEY"); // 读取 Unsplash Access Key
             inputStream.close();
         } catch (Exception e) {
             Log.e(TAG, "读取secrets.properties失败: " + e.getMessage(), e);
@@ -74,6 +80,11 @@ public class TravelerApplication extends Application {
             } catch (Exception e) {
                 Log.e(TAG, "动态注入百度API Key失败: " + e.getMessage(), e);
             }
+        }
+
+        // TODO: 检查 Unsplash Access Key 是否读取成功
+        if (UNSPLASH_ACCESS_KEY == null || UNSPLASH_ACCESS_KEY.isEmpty()) {
+             Log.e(TAG, "请在 assets/secrets.properties 中设置您的 UNSPLASH_ACCESS_KEY！");
         }
     }
 } 

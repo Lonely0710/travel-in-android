@@ -146,12 +146,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                <!-- 轮播图片 -->
-                <ImageView
-                    android:id="@+id/banner_image"
+                <!-- 轮播内容区域 -->
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/city_carousel_viewpager"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop" />
+                    android:layout_height="match_parent"/>
 
                 <!-- 左翻页按钮 -->
                 <ImageView
@@ -191,21 +190,25 @@
                     android:paddingHorizontal="6dp"
                     android:paddingVertical="2dp">
                     <!-- 小圆点可动态添加 -->
+                    <!-- Existing dummy dots will be removed and added dynamically -->
                     <View
                         android:layout_width="8dp"
                         android:layout_height="8dp"
                         android:layout_margin="2dp"
-                        android:background="@drawable/bg_banner_dot_selected" />
+                        android:background="@drawable/bg_banner_dot_selected"
+                        android:visibility="gone"/>
                     <View
                         android:layout_width="8dp"
                         android:layout_height="8dp"
                         android:layout_margin="2dp"
-                        android:background="@drawable/bg_banner_dot_unselected" />
+                        android:background="@drawable/bg_banner_dot_unselected"
+                        android:visibility="gone"/>
                     <View
                         android:layout_width="8dp"
                         android:layout_height="8dp"
                         android:layout_margin="2dp"
-                        android:background="@drawable/bg_banner_dot_unselected" />
+                        android:background="@drawable/bg_banner_dot_unselected"
+                        android:visibility="gone"/>
                 </LinearLayout>
                 </FrameLayout>
             </androidx.cardview.widget.CardView>
