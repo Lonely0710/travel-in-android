@@ -19,6 +19,7 @@ import com.bjtu.traveler.utils.FragmentSwitcher;
 import com.bjtu.traveler.viewmodel.HomeViewModel;
 import com.bjtu.traveler.viewmodel.UserViewModel;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -58,10 +59,15 @@ public class HomeFragment extends Fragment {
             if (user != null) {
                 String username = user.getUsername();
                 String avatarUrl = user.getAvatarUrl();
+
                 tvHiUser.setText(!TextUtils.isEmpty(username) ? "Hi, " + username : "Hi, 游客");
                 // 加载头像
                 if (!TextUtils.isEmpty(avatarUrl)) {
-                    Glide.with(this).load(avatarUrl).placeholder(R.drawable.ic_avatar).into(ivAvatar);
+                    Glide.with(this)
+                         .load(avatarUrl)
+                         .placeholder(R.drawable.ic_avatar)
+                         .apply(RequestOptions.circleCropTransform())
+                         .into(ivAvatar);
                 } else {
                     ivAvatar.setImageResource(R.drawable.ic_avatar);
                 }

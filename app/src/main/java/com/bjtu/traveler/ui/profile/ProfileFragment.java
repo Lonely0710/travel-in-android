@@ -18,6 +18,7 @@ import com.bjtu.traveler.data.model.User;
 import com.bjtu.traveler.ui.auth.LoginFragment;
 import com.bjtu.traveler.viewmodel.ProfileViewModel;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.bjtu.traveler.utils.FragmentSwitcher;
 
 public class ProfileFragment extends Fragment {
@@ -38,9 +39,16 @@ public class ProfileFragment extends Fragment {
         User user = profileViewModel.getCurrentUser();
 
         if (user != null) {
-            tvUsername.setText(!TextUtils.isEmpty(user.getUsername()) ? user.getUsername() : "游客");
-            if (!TextUtils.isEmpty(user.getAvatarUrl())) {
-                Glide.with(this).load(user.getAvatarUrl()).placeholder(R.drawable.ic_avatar).into(ivAvatar);
+            String username = user.getUsername();
+            String avatarUrl = user.getAvatarUrl();
+
+            tvUsername.setText(!TextUtils.isEmpty(username) ? username : "游客");
+            if (!TextUtils.isEmpty(avatarUrl)) {
+                Glide.with(this)
+                     .load(avatarUrl)
+                     .placeholder(R.drawable.ic_avatar)
+                     .apply(RequestOptions.circleCropTransform())
+                     .into(ivAvatar);
             } else {
                 ivAvatar.setImageResource(R.drawable.ic_avatar);
             }

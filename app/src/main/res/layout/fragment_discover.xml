@@ -15,7 +15,7 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:src="@drawable/ic_write_post"
-        android:background="@drawable/bg_circular_button"
+        android:background="@drawable/bg_post_button"
         android:layout_gravity="end|bottom"
         android:layout_margin="24dp"
         android:elevation="8dp"

@@ -62,6 +62,9 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 
+    // Jsoup 解析库
     implementation("org.jsoup:jsoup:1.17.2")
+
+    // 拼音转换库
     implementation("com.belerweb:pinyin4j:2.5.1")
 }
