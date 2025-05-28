@@ -20,6 +20,7 @@ public class TravelerApplication extends Application {
     public static String BAIDU_LBS_API_KEY = null;
     public static String DEEPSEEK_API_KEY = null;
     public static String UNSPLASH_ACCESS_KEY = null; // 添加静态变量用于存储 Unsplash Access Key
+    public static String OPENWEATHER_API_KEY = null; // 添加静态变量用于存储 OpenWeather API Key
 
     @Override
     public void onCreate() {
@@ -38,6 +39,7 @@ public class TravelerApplication extends Application {
             BAIDU_LBS_API_KEY = properties.getProperty("BAIDU_LBS_API_KEY");
             DEEPSEEK_API_KEY = properties.getProperty("DEEPSEEK_API_KEY");
             UNSPLASH_ACCESS_KEY = properties.getProperty("UNSPLASH_ACCESS_KEY"); // 读取 Unsplash Access Key
+            OPENWEATHER_API_KEY = properties.getProperty("OPENWEATHER_API_KEY"); // 读取 OpenWeather API Key
             inputStream.close();
         } catch (Exception e) {
             Log.e(TAG, "读取secrets.properties失败: " + e.getMessage(), e);
@@ -85,6 +87,11 @@ public class TravelerApplication extends Application {
         // TODO: 检查 Unsplash Access Key 是否读取成功
         if (UNSPLASH_ACCESS_KEY == null || UNSPLASH_ACCESS_KEY.isEmpty()) {
              Log.e(TAG, "请在 assets/secrets.properties 中设置您的 UNSPLASH_ACCESS_KEY！");
+        }
+
+        // 检查 OpenWeather API Key 是否读取成功
+        if (OPENWEATHER_API_KEY == null || OPENWEATHER_API_KEY.isEmpty()) {
+            Log.e(TAG, "请在 assets/secrets.properties 中设置您的 OPENWEATHER_API_KEY！");
         }
     }
 } 

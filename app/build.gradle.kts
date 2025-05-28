@@ -67,4 +67,7 @@ dependencies {
 
     // 拼音转换库
     implementation("com.belerweb:pinyin4j:2.5.1")
+
+    // 位置权限请求库
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 }

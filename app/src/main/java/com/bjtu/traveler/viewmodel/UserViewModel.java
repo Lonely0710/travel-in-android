@@ -20,6 +20,7 @@ public class UserViewModel extends AndroidViewModel {
     private UserRepository userRepository;
     private MutableLiveData<UserRepository.BmobUserResult> loginResult = new MutableLiveData<>();
     private MutableLiveData<UserRepository.BmobUserResult> registerResult = new MutableLiveData<>();
+    private final MutableLiveData<User> userDataLiveData = new MutableLiveData<>();
 
     public UserViewModel(@NonNull Application application) {
         super(application);
@@ -96,5 +97,9 @@ public class UserViewModel extends AndroidViewModel {
             userLiveData.setValue(null);
         }
         return userLiveData;
+    }
+
+    public LiveData<User> getUserLiveData() {
+        return userDataLiveData;
     }
 } 

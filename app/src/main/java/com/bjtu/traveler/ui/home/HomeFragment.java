@@ -1,46 +1,78 @@
 package com.bjtu.traveler.ui.home;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
+
+// 如果您的项目使用了这些，请保留；否则可以移除这些导入
+
+
 import com.bjtu.traveler.R;
+import com.bjtu.traveler.adapter.CityCarouselAdapter;
 import com.bjtu.traveler.data.model.CityCarouselItem;
+import com.bjtu.traveler.data.model.WeatherData;
+import com.bjtu.traveler.ui.common.WebViewFragment;
+import com.bjtu.traveler.ui.explore.ExploreFragment;
 import com.bjtu.traveler.ui.profile.ProfileFragment;
-import com.bjtu.traveler.utils.FragmentSwitcher;
+import com.bjtu.traveler.utils.FragmentSwitcher; 
 import com.bjtu.traveler.viewmodel.HomeViewModel;
 import com.bjtu.traveler.viewmodel.UserViewModel;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.material.navigation.NavigationView;
+import com.google.android.gms.location.FusedLocationProviderClient; 
+import com.google.android.gms.location.LocationServices; 
+import com.google.android.gms.location.LocationRequest; 
+import com.google.android.gms.location.LocationCallback; 
+import com.google.android.gms.location.LocationResult; 
 
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.core.view.GravityCompat;
-
-import com.bjtu.traveler.adapter.CityCarouselAdapter;
-import com.bjtu.traveler.ui.common.WebViewFragment;
 
 import java.util.ArrayList;
-import java.util.List;
+// 如果您在其他地方使用了这些，请保留；否则可以移除
+// import java.io.IOException;
+// import java.io.InputStream;
+// import java.io.InputStreamReader;
+// import java.net.HttpURLConnection;
+// import java.net.URL;
+// import java.io.BufferedReader;
+// import org.json.JSONObject;
+// import org.json.JSONException;
+// import java.util.Objects;
+// import okhttp3.Call;
+// import okhttp3.Callback;
+// import okhttp3.OkHttpClient;
+// import okhttp3.Request;
+// import okhttp3.Response;
+
 
 /**
  * HomeFragment 类，首页 Fragment
- * 负责显示用户信息、搜索框、城市轮播图等 UI 元素，并处理相应的交互逻辑
+ * 负责显示用户信息、搜索框、城市轮播图、天气信息、推荐卡片等 UI 元素，并处理相应的交互逻辑
  */
 public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCityItemClickListener {
+    private static final String TAG = "HomeFragment"; // 添加 TAG 用于日志
+
     private HomeViewModel homeViewModel;
     private UserViewModel userViewModel;
 
@@ -50,15 +82,38 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
     private ImageView btnBannerLeft;
     private ImageView btnBannerRight;
 
+    private LinearLayout llWeather;
+    private ImageView ivWeatherIcon;
+    private TextView tvWeatherLocation;
+    private TextView tvWeatherDetails;
+
+    private EditText etSearch;
+    private ImageView ivDice;
+
+    private LinearLayout btnGetRecommendations;
+    private ImageView ivBtnExplore;
+    private TextView tvBtnExplore;
+
     private Handler autoScrollHandler;
     private Runnable autoScrollRunnable;
     private final long AUTO_SCROLL_DELAY = 3000L;
+
+    // 位置服务客户端
+    private FusedLocationProviderClient fusedLocationClient;
+    // 位置请求参数
+    private LocationRequest locationRequest;
+    // 位置更新回调
+    private LocationCallback locationCallback;
+    // 位置权限请求码
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
+        // 查找 UI 元素
         View topBar = root.findViewById(R.id.topbar_home);
         if (topBar != null) {
             TextView tvTitle = topBar.findViewById(R.id.tv_title);
@@ -70,26 +125,45 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
         ImageView ivAvatar = root.findViewById(R.id.iv_avatar);
         TextView tvHiUser = root.findViewById(R.id.tv_hi_user);
         TextView tvPoints = root.findViewById(R.id.tv_points);
-        EditText etSearch = root.findViewById(R.id.et_search);
+        llWeather = root.findViewById(R.id.ll_weather);
+        ivWeatherIcon = root.findViewById(R.id.iv_weather_icon);
+        tvWeatherLocation = root.findViewById(R.id.tv_weather_location);
+        tvWeatherDetails = root.findViewById(R.id.tv_weather_details);
+        etSearch = root.findViewById(R.id.et_search);
+        ivDice = root.findViewById(R.id.iv_dice);
         cityCarouselViewPager = root.findViewById(R.id.city_carousel_viewpager);
         bannerIndicator = root.findViewById(R.id.banner_indicator);
         btnBannerLeft = root.findViewById(R.id.btn_banner_left);
         btnBannerRight = root.findViewById(R.id.btn_banner_right);
+        btnGetRecommendations = root.findViewById(R.id.btn_get_recommendations);
+        ivBtnExplore = root.findViewById(R.id.iv_btn_explore);
+        tvBtnExplore = root.findViewById(R.id.tv_btn_explore);
 
         DrawerLayout drawerLayout = requireActivity().findViewById(R.id.drawer_layout);
 
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
 
+        // 初始化位置服务相关
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+        createLocationRequest(); // 创建位置请求参数
+        createLocationCallback(); // 创建位置更新回调
+
         cityCarouselAdapter = new CityCarouselAdapter(new ArrayList<>());
         cityCarouselViewPager.setAdapter(cityCarouselAdapter);
         cityCarouselAdapter.setOnCityItemClickListener(this);
 
+        // --- Lottie动画：城市轮播图加载 ---
+        com.airbnb.lottie.LottieAnimationView lottieLoading = root.findViewById(R.id.lottie_loading);
+        if (lottieLoading != null) {
+            lottieLoading.loop(true);
+            lottieLoading.playAnimation();
+            lottieLoading.setVisibility(View.VISIBLE);
+        }
         homeViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 String username = user.getUsername();
                 String avatarUrl = user.getAvatarUrl();
-
                 tvHiUser.setText(!TextUtils.isEmpty(username) ? "Hi, " + username : "Hi, 游客");
                 if (!TextUtils.isEmpty(avatarUrl)) {
                     Glide.with(this)
@@ -101,10 +175,13 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
                 } else {
                     ivAvatar.setImageResource(R.drawable.ic_avatar);
                 }
+                root.findViewById(R.id.ll_points).setVisibility(View.VISIBLE);
             } else {
                 tvHiUser.setText("Hi, 游客");
                 ivAvatar.setImageResource(R.drawable.ic_avatar);
+                root.findViewById(R.id.ll_points).setVisibility(View.GONE);
             }
+            llWeather.setVisibility(View.VISIBLE); // 无论登录与否都显示天气卡片
         });
 
         homeViewModel.getCityCarouselLiveData().observe(getViewLifecycleOwner(), cityItems -> {
@@ -112,6 +189,19 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
                 cityCarouselAdapter.setCityList(cityItems);
                 setupIndicator(cityItems.size());
                 startAutoScroll();
+                // 加载完成后隐藏Lottie动画
+                if (lottieLoading != null) {
+                    lottieLoading.cancelAnimation();
+                    lottieLoading.setVisibility(View.GONE);
+                }
+            } else {
+                cityCarouselViewPager.setVisibility(View.GONE);
+                bannerIndicator.setVisibility(View.GONE);
+                // 数据为空时可继续显示Lottie动画
+                if (lottieLoading != null) {
+                    lottieLoading.setVisibility(View.VISIBLE);
+                    lottieLoading.playAnimation();
+                }
             }
         });
 
@@ -128,7 +218,7 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
             if (currentItem > 0) {
                 cityCarouselViewPager.setCurrentItem(currentItem - 1, true);
             } else if (cityCarouselAdapter.getItemCount() > 0) {
-                 cityCarouselViewPager.setCurrentItem(cityCarouselAdapter.getItemCount() - 1, true);
+                cityCarouselViewPager.setCurrentItem(cityCarouselAdapter.getItemCount() - 1, true);
             }
         });
 
@@ -167,9 +257,216 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
             }
         });
 
+        if (btnGetRecommendations != null) {
+            btnGetRecommendations.setOnClickListener(v -> {
+                FragmentSwitcher.switchFragmentAndSelectItem(requireActivity(), new ExploreFragment(), "ExploreFragment", R.id.nav_explore);
+            });
+        }
+
+        // 确保在findViewById之后注册weatherLiveData观察者
+        homeViewModel.getWeatherLiveData().observe(getViewLifecycleOwner(), weatherData -> {
+            updateWeatherUI(weatherData);
+        });
+
         return root;
     }
 
+    // 创建位置请求参数
+    private void createLocationRequest() {
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(10000); // 设置位置更新间隔（毫秒）
+        locationRequest.setFastestInterval(5000); // 设置最快位置更新间隔
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY); // 设置定位优先级
+    }
+
+    // 创建位置更新回调
+    private void createLocationCallback() {
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) { // 使用 @NonNull 标记参数
+                if (locationResult == null) {
+                    return;
+                }
+                // 处理位置更新
+                for (Location location : locationResult.getLocations()) {
+                    if (location != null) {
+                        // 获取到位置信息，调用 ViewModel 获取天气方法
+                        homeViewModel.fetchWeatherByLocation(location.getLatitude(), location.getLongitude());
+                        // 获取到位置后可以停止位置更新以节省电量
+                        stopLocationUpdates();
+                        break; // 只处理最新的位置
+                    }
+                }
+            }
+        };
+    }
+
+    // 检查位置权限并获取天气
+    // 在用户未登录时，如果权限已授予，启动位置更新；否则请求权限
+    // 这个方法主要在 onResume 中被调用
+    private void checkLocationPermissionAndFetchWeather() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            // 权限已授予，开始请求位置更新
+            startLocationUpdates();
+        } else {
+            // 权限未授予，请求权限
+            // requestPermissions 是 Fragment 的方法
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    // 开始位置更新
+    // 需要检查权限，尽管调用前可能已检查
+    private void startLocationUpdates() {
+        try {
+            // 确保 Fragment 附加到 Activity 且 Context 非空
+            if (getContext() != null && ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                 fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+            }
+        } catch (SecurityException e) {
+            // 处理没有权限的情况
+            Log.e(TAG, "位置权限未授予: " + e.getMessage());
+            // 如果因权限问题无法获取位置，更新 UI 显示错误
+             updateWeatherUI(null); // 显示错误状态
+        }
+    }
+
+    // 停止位置更新
+    private void stopLocationUpdates() {
+        if (fusedLocationClient != null && locationCallback != null) {
+             // 确保 Fragment 附加到 Activity
+             if (isAdded()) {
+                 fusedLocationClient.removeLocationUpdates(locationCallback);
+             }
+        }
+    }
+
+    // 根据 ViewModel 提供的 WeatherData 更新 UI
+    // 负责将 ViewModel 提供的结构化天气数据呈现在 UI 上
+    private void updateWeatherUI(WeatherData weatherData) {
+        Log.d("HomeFragment", "updateWeatherUI called, weatherData=" + (weatherData == null ? "null" : weatherData.getCityName() + "," + weatherData.getDescription() + "," + weatherData.getTemperature() + "," + weatherData.getHumidity() + "," + weatherData.getWeatherId()));
+        if (!isAdded() || getActivity() == null) {
+            Log.d("HomeFragment", "Fragment not attached, skip UI update");
+            return;
+        }
+        requireActivity().runOnUiThread(() -> {
+            if (weatherData != null) {
+                String city = weatherData.getCityName();
+                String desc = weatherData.getDescription();
+                double temp = weatherData.getTemperature();
+                int humidity = weatherData.getHumidity();
+                int weatherId = weatherData.getWeatherId();
+                if (city == null || city.isEmpty()) city = "未知城市";
+                if (desc == null || desc.isEmpty()) desc = "未知天气";
+                String tempStr = (temp > -100 && temp < 100) ? ((int) temp + "°C") : "--°C";
+                String humidityStr = (humidity >= 0 && humidity <= 100) ? (humidity + "%") : "--%";
+                tvWeatherLocation.setText(city + "·" + desc);
+                tvWeatherDetails.setText(tempStr + " | " + humidityStr);
+                setWeatherIcon(weatherId);
+                Log.d("HomeFragment", "Set weather: " + tvWeatherLocation.getText() + " / " + tvWeatherDetails.getText());
+            } else {
+                tvWeatherLocation.setText("获取天气失败");
+                tvWeatherDetails.setText("请稍后再试");
+                ivWeatherIcon.setImageResource(R.drawable.ic_weather_routine);
+                Log.d("HomeFragment", "Set weather: 获取天气失败 / 请稍后再试");
+            }
+        });
+    }
+
+     // 根据 OpenWeather weatherId 设置天气图标 (保留在 Fragment 中处理，因为它涉及 UI 资源匹配)
+     // 这个方法是 UI 层的逻辑，根据 ViewModel 提供的 weatherId 选择合适的本地 Drawable 资源
+    private void setWeatherIcon(int weatherId) {
+        int iconResId;
+        // 根据 OpenWeather 的 weather condition codes 匹配本地图标
+        // 参考: https://openweathermap.org/weather-conditions
+        if (weatherId >= 200 && weatherId < 300) { // Thunderstorm (雷暴)
+            iconResId = R.drawable.ic_weather_bolt;
+        } else if (weatherId >= 300 && weatherId < 500) { // Drizzle (毛毛雨)
+            iconResId = R.drawable.ic_weather_routine; // 使用默认图标或补充 drizzle 图标
+        } else if (weatherId >= 500 && weatherId < 600) { // Rain (雨)
+             iconResId = R.drawable.ic_weather_routine; // 使用默认图标或补充 rain 图标
+        } else if (weatherId >= 600 && weatherId < 700) { // Snow (雪)
+            iconResId = R.drawable.ic_weather_snow;
+        } else if (weatherId >= 700 && weatherId < 800) { // Atmosphere (Mist, Smoke, Haze, Fog, etc. 大气现象：雾、霾等)
+            iconResId = R.drawable.ic_weather_routine; // 使用默认图标或补充 fog/mist 图标
+        } else if (weatherId == 800) { // Clear (晴朗)
+            iconResId = R.drawable.ic_weather_sunny;
+        } else if (weatherId > 800 && weatherId < 900) { // Clouds (云)
+            iconResId = R.drawable.ic_weather_cloudy;
+        } else if (weatherId >= 900) { // Extreme / Additional (极端天气)
+             iconResId = R.drawable.ic_weather_routine; // 使用默认图标或补充 extreme/additional 图标
+        } else { // Default or unknown (默认或未知)
+            iconResId = R.drawable.ic_weather_routine;
+        }
+        ivWeatherIcon.setImageResource(iconResId);
+    }
+
+
+    // 处理权限请求结果
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 权限已授予，开始获取位置
+                startLocationUpdates();
+            } else {
+                // 权限被拒绝
+                Log.e(TAG, "位置权限被拒绝");
+                 updateWeatherUI(null); // 显示错误状态
+            }
+        }
+    }
+
+    // Fragment 可见时调用
+    @Override
+    public void onStart() {
+        super.onStart();
+        // 如果用户是游客并且位置权限已经授予，则开始位置更新
+        // 在 onStart 启动位置更新是推荐的做法，因为它与 Fragment 可见性关联
+        if (userViewModel.getUserLiveData().getValue() == null && ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+             startLocationUpdates();
+        }
+        // 在 Fragment 可见时开始城市轮播图的自动滚动
+        if (cityCarouselAdapter != null && cityCarouselAdapter.getItemCount() > 0) {
+             startAutoScroll();
+        }
+    }
+
+    // Fragment 重新回到活跃状态时调用
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    // Fragment 不活跃时调用
+    @Override
+    public void onPause() {
+        super.onPause();
+        // 在 Fragment 不活跃时停止城市轮播图的自动滚动
+        stopAutoScroll();
+        // 停止位置更新通常放在 onStop 中更合适，因为它与可见性关联
+    }
+
+    // Fragment 不可见时调用
+    @Override
+    public void onStop() {
+        super.onStop();
+        // 在 Fragment 不可见时停止位置更新，节省电量和资源
+        stopLocationUpdates();
+    }
+
+    // Fragment 的视图被销毁时调用
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // 在视图销毁时确保停止自动滚动和位置更新，避免内存泄漏
+        stopAutoScroll();
+        stopLocationUpdates();
+        // TODO: 清理其他资源，如解除监听器等（如果需要）
+    }
+
+    // 设置轮播图指示器
     private void setupIndicator(int count) {
         bannerIndicator.removeAllViews();
         for (int i = 0; i < count; i++) {
@@ -184,6 +481,7 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
         }
     }
 
+    // 更新轮播图指示器选中状态
     private void updateIndicator(int selectedPosition) {
         int dotCount = bannerIndicator.getChildCount();
         for (int i = 0; i < dotCount; i++) {
@@ -194,37 +492,20 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
         }
     }
 
+    // 开始城市轮播图自动滚动
     private void startAutoScroll() {
-        stopAutoScroll();
+        stopAutoScroll(); // 先停止之前的任务，避免重复
         autoScrollHandler.postDelayed(autoScrollRunnable, AUTO_SCROLL_DELAY);
     }
 
+    // 停止城市轮播图自动滚动
     private void stopAutoScroll() {
         if (autoScrollHandler != null && autoScrollRunnable != null) {
             autoScrollHandler.removeCallbacks(autoScrollRunnable);
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        stopAutoScroll();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (cityCarouselAdapter != null && cityCarouselAdapter.getItemCount() > 0) {
-             startAutoScroll();
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        stopAutoScroll();
-    }
-
+    // 城市轮播图项点击事件
     @Override
     public void onItemClick(CityCarouselItem city) {
         if (city != null && city.getDetailUrl() != null && !city.getDetailUrl().isEmpty()) {
