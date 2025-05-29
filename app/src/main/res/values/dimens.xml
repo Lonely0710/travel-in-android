@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="card_default_elevation">2dp</dimen>
+    <dimen name="card_pressed_translationZ">8dp</dimen>
+</resources>

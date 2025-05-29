@@ -1,21 +1,21 @@
 package com.bjtu.traveler.data.model;
 
 /**
- * 天气数据模型类
+ * 和风天气数据模型类
  */
 public class WeatherData {
     private String cityName;
     private String description;
     private double temperature;
     private int humidity;
-    private int weatherId; // OpenWeather Weather condition ID
+    private String iconCode; // 和风天气icon代码
 
-    public WeatherData(String cityName, String description, double temperature, int humidity, int weatherId) {
+    public WeatherData(String cityName, String description, double temperature, int humidity, String iconCode) {
         this.cityName = cityName;
         this.description = description;
         this.temperature = temperature;
         this.humidity = humidity;
-        this.weatherId = weatherId;
+        this.iconCode = iconCode;
     }
 
     // Getters
@@ -35,7 +35,7 @@ public class WeatherData {
         return humidity;
     }
 
-    public int getWeatherId() {
-        return weatherId;
+    public String getIconCode() {
+        return iconCode;
     }
 } 

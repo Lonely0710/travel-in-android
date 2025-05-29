@@ -115,7 +115,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@drawable/ic_btn_travel"
-                        android:tint="@color/white"
+                        app:tint="@color/white"
                         android:layout_marginEnd="8dp" />
                     <TextView
                         android:id="@+id/tv_btn_explore"
@@ -192,16 +192,30 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 app:cardCornerRadius="20dp"
-                app:cardElevation="8dp">
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@android:color/white">
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent">
 
                 <!-- 轮播内容区域 -->
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/city_carousel_viewpager"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+
+                <!-- 城市轮播图加载动画 -->
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/lottie_loading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:lottie_rawRes="@raw/walking_man"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    android:visibility="visible" />
 
                 <!-- 左翻页按钮 -->
                 <ImageView
@@ -268,7 +282,7 @@
         <!-- 分类按钮区 -->
         <include layout="@layout/category_buttons_home" />
 
-        <!-- 并排双卡片区域 -->
+        <!-- 功能卡片区域 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -279,85 +293,153 @@
             android:layout_marginEnd="16dp">
 
             <!-- 天气卡片 -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_weather"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:minHeight="100dp"
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="6dp">
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="#FAFAFA"
+                app:rippleColor="?attr/colorControlHighlight">
 
-                <LinearLayout
-                    android:id="@+id/ll_weather"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="16dp"
-                    android:background="@color/white">
+                    android:layout_height="match_parent">
 
-                    <ImageView
-                        android:id="@+id/iv_weather_icon"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginEnd="8dp"
-                        android:src="@drawable/ic_weather_sunny"/>
+                    <!-- Lottie加载动画 -->
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/lottie_weather_loading"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center"
+                        app:lottie_rawRes="@raw/weather_longmao"
+                        app:lottie_autoPlay="true"
+                        app:lottie_loop="true"
+                        android:visibility="visible" />
 
+                    <!-- 天气内容区 -->
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:id="@+id/ll_weather"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:minHeight="100dp"
+                        android:orientation="vertical"
+                        android:padding="20dp"
+                        android:gravity="center"
+                        android:background="@android:color/transparent"
+                        android:visibility="gone">
 
-                        <TextView
-                            android:id="@+id/tv_weather_location"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="北京·晴朗"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/text_primary" />
-
+                        <!-- 第一排：图标 + 天气描述 + 温度湿度 -->
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginTop="2dp">
-
+                            android:gravity="center_vertical">
                             <ImageView
-                                android:layout_width="16dp"
-                                android:layout_height="16dp"
-                                android:layout_marginEnd="4dp"
-                                android:src="@drawable/ic_weather_thermostat" />
+                                android:id="@+id/iv_weather_icon"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_marginEnd="12dp"
+                                android:src="@drawable/ic_weather_sunny"
+                                android:tint="@color/color_primary"/>
 
-                            <TextView
-                                android:id="@+id/tv_weather_details"
-                                android:layout_width="wrap_content"
+                            <!-- 右侧内容：天气描述 + 温度湿度 -->
+                            <LinearLayout
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:text="25°C | 50%"
-                                android:textSize="12sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/text_secondary" />
+                                android:layout_weight="1"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
+                                <!-- 天气描述 -->
+                                <TextView
+                                    android:id="@+id/tv_weather_description"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="8dp"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    android:maxEms="2"
+                                    android:maxLines="2"
+                                    android:ellipsize="none"
+                                    android:breakStrategy="highQuality"
+                                    android:hyphenationFrequency="full"
+                                />
+
+                                <!-- 温度湿度及其图标 -->
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical">
+                                    <ImageView
+                                        android:layout_width="16dp"
+                                        android:layout_height="16dp"
+                                        android:layout_marginEnd="4dp"
+                                        android:src="@drawable/ic_weather_thermostat"
+                                        app:tint="@color/text_primary" />
+                                    <TextView
+                                        android:id="@+id/tv_weather_details"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="25°C | 50%"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold"
+                                        android:textColor="@color/text_primary" />
+                                </LinearLayout>
+                            </LinearLayout>
                         </LinearLayout>
 
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="#F0F0F0" />
+
+                        <!-- 第二排：地点 (靠右对齐) -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="end|center_vertical">
+                            <!-- 天气地点 -->
+                            <TextView
+                                android:id="@+id/tv_weather_location"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="0dp"
+                                android:textStyle="bold"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- 待开发卡片 -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_placeholder"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:minHeight="100dp"
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="6dp">
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/white"
+                app:rippleColor="?attr/colorControlHighlight">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="match_parent"
+                    android:minHeight="100dp"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:background="@android:color/transparent">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -365,7 +447,7 @@
                         android:textColor="@color/text_secondary"
                         android:textSize="16sp"/>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
         <!-- 内容区 -->
@@ -374,16 +456,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/background" />
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lottie_loading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:lottie_rawRes="@raw/walking_man"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            android:visibility="gone"/>
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

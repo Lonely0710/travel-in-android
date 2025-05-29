@@ -19,15 +19,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
-
-// 如果您的项目使用了这些，请保留；否则可以移除这些导入
-
 
 import com.bjtu.traveler.R;
 import com.bjtu.traveler.adapter.CityCarouselAdapter;
@@ -36,34 +34,18 @@ import com.bjtu.traveler.data.model.WeatherData;
 import com.bjtu.traveler.ui.common.WebViewFragment;
 import com.bjtu.traveler.ui.explore.ExploreFragment;
 import com.bjtu.traveler.ui.profile.ProfileFragment;
-import com.bjtu.traveler.utils.FragmentSwitcher; 
+import com.bjtu.traveler.utils.FragmentSwitcher;
 import com.bjtu.traveler.viewmodel.HomeViewModel;
 import com.bjtu.traveler.viewmodel.UserViewModel;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.location.FusedLocationProviderClient; 
-import com.google.android.gms.location.LocationServices; 
-import com.google.android.gms.location.LocationRequest; 
-import com.google.android.gms.location.LocationCallback; 
-import com.google.android.gms.location.LocationResult; 
-
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
-// 如果您在其他地方使用了这些，请保留；否则可以移除
-// import java.io.IOException;
-// import java.io.InputStream;
-// import java.io.InputStreamReader;
-// import java.net.HttpURLConnection;
-// import java.net.URL;
-// import java.io.BufferedReader;
-// import org.json.JSONObject;
-// import org.json.JSONException;
-// import java.util.Objects;
-// import okhttp3.Call;
-// import okhttp3.Callback;
-// import okhttp3.OkHttpClient;
-// import okhttp3.Request;
-// import okhttp3.Response;
 
 
 /**
@@ -86,6 +68,7 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
     private ImageView ivWeatherIcon;
     private TextView tvWeatherLocation;
     private TextView tvWeatherDetails;
+    private TextView tvWeatherDescription;
 
     private EditText etSearch;
     private ImageView ivDice;
@@ -129,6 +112,7 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
         ivWeatherIcon = root.findViewById(R.id.iv_weather_icon);
         tvWeatherLocation = root.findViewById(R.id.tv_weather_location);
         tvWeatherDetails = root.findViewById(R.id.tv_weather_details);
+        tvWeatherDescription = root.findViewById(R.id.tv_weather_description);
         etSearch = root.findViewById(R.id.et_search);
         ivDice = root.findViewById(R.id.iv_dice);
         cityCarouselViewPager = root.findViewById(R.id.city_carousel_viewpager);
@@ -144,6 +128,22 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
 
+        // 新增：天气卡片加载动画
+        com.airbnb.lottie.LottieAnimationView lottieWeatherLoading = root.findViewById(R.id.lottie_weather_loading);
+
+        // 新增：城市轮播图加载动画
+        com.airbnb.lottie.LottieAnimationView lottieLoading = root.findViewById(R.id.lottie_loading);
+
+        // 确保天气内容区初始不可见，无论 ViewModel 状态如何
+        if (llWeather != null) {
+            llWeather.setVisibility(View.GONE);
+        }
+        // 初始时显示天气加载动画
+        if (lottieWeatherLoading != null) {
+             lottieWeatherLoading.setVisibility(View.VISIBLE);
+             lottieWeatherLoading.playAnimation();
+        }
+
         // 初始化位置服务相关
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
         createLocationRequest(); // 创建位置请求参数
@@ -152,14 +152,7 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
         cityCarouselAdapter = new CityCarouselAdapter(new ArrayList<>());
         cityCarouselViewPager.setAdapter(cityCarouselAdapter);
         cityCarouselAdapter.setOnCityItemClickListener(this);
-
-        // --- Lottie动画：城市轮播图加载 ---
-        com.airbnb.lottie.LottieAnimationView lottieLoading = root.findViewById(R.id.lottie_loading);
-        if (lottieLoading != null) {
-            lottieLoading.loop(true);
-            lottieLoading.playAnimation();
-            lottieLoading.setVisibility(View.VISIBLE);
-        }
+        
         homeViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 String username = user.getUsername();
@@ -181,7 +174,6 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
                 ivAvatar.setImageResource(R.drawable.ic_avatar);
                 root.findViewById(R.id.ll_points).setVisibility(View.GONE);
             }
-            llWeather.setVisibility(View.VISIBLE); // 无论登录与否都显示天气卡片
         });
 
         homeViewModel.getCityCarouselLiveData().observe(getViewLifecycleOwner(), cityItems -> {
@@ -189,15 +181,18 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
                 cityCarouselAdapter.setCityList(cityItems);
                 setupIndicator(cityItems.size());
                 startAutoScroll();
-                // 加载完成后隐藏Lottie动画
+                // 数据加载完成后隐藏城市轮播图Lottie动画，显示ViewPager
                 if (lottieLoading != null) {
                     lottieLoading.cancelAnimation();
                     lottieLoading.setVisibility(View.GONE);
                 }
+                if (cityCarouselViewPager != null) {
+                    cityCarouselViewPager.setVisibility(View.VISIBLE);
+                }
             } else {
                 cityCarouselViewPager.setVisibility(View.GONE);
                 bannerIndicator.setVisibility(View.GONE);
-                // 数据为空时可继续显示Lottie动画
+                // 数据为空时，显示城市轮播图Lottie动画
                 if (lottieLoading != null) {
                     lottieLoading.setVisibility(View.VISIBLE);
                     lottieLoading.playAnimation();
@@ -265,8 +260,30 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
 
         // 确保在findViewById之后注册weatherLiveData观察者
         homeViewModel.getWeatherLiveData().observe(getViewLifecycleOwner(), weatherData -> {
-            updateWeatherUI(weatherData);
+            // updateWeatherUI(weatherData); // 不在这里直接调用 updateWeatherUI
+            // 新增：根据weatherData切换动画和内容
+            if (lottieWeatherLoading != null && llWeather != null) {
+                if (weatherData == null) {
+                    // 数据未加载或加载失败，显示动画
+                    lottieWeatherLoading.setVisibility(View.VISIBLE);
+                    lottieWeatherLoading.playAnimation();
+                    llWeather.setVisibility(View.GONE);
+                } else {
+                    // 数据加载成功，隐藏动画，显示内容，并更新UI
+                    lottieWeatherLoading.cancelAnimation();
+                    lottieWeatherLoading.setVisibility(View.GONE);
+                    llWeather.setVisibility(View.VISIBLE);
+                    updateWeatherUI(weatherData); // 数据加载成功后再更新UI
+                }
+            }
         });
+
+        // 点击骰子图标弹出对话框事件
+        if (ivDice != null) {
+            ivDice.setOnClickListener(v -> {
+                showRandomCityDialogFragment();
+            });
+        }
 
         return root;
     }
@@ -342,65 +359,50 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
     }
 
     // 根据 ViewModel 提供的 WeatherData 更新 UI
-    // 负责将 ViewModel 提供的结构化天气数据呈现在 UI 上
+    // 这个方法现在只负责实际更新UI元素的内容，不控制可见性
     private void updateWeatherUI(WeatherData weatherData) {
-        Log.d("HomeFragment", "updateWeatherUI called, weatherData=" + (weatherData == null ? "null" : weatherData.getCityName() + "," + weatherData.getDescription() + "," + weatherData.getTemperature() + "," + weatherData.getHumidity() + "," + weatherData.getWeatherId()));
-        if (!isAdded() || getActivity() == null) {
-            Log.d("HomeFragment", "Fragment not attached, skip UI update");
+        Log.d("HomeFragment", "updateWeatherUI called, weatherData=" + (weatherData == null ? "null" : weatherData.getCityName() + "," + weatherData.getDescription() + "," + weatherData.getTemperature() + "," + weatherData.getHumidity() + "," + weatherData.getIconCode()));
+        if (!isAdded() || getActivity() == null || weatherData == null) {
+            Log.d("HomeFragment", "Fragment not attached, or weatherData is null, skip UI update");
+            if (tvWeatherLocation != null) tvWeatherLocation.setText("");
+            if (tvWeatherDescription != null) tvWeatherDescription.setText("");
+            if (tvWeatherDetails != null) tvWeatherDetails.setText("");
             return;
         }
         requireActivity().runOnUiThread(() -> {
-            if (weatherData != null) {
-                String city = weatherData.getCityName();
-                String desc = weatherData.getDescription();
-                double temp = weatherData.getTemperature();
-                int humidity = weatherData.getHumidity();
-                int weatherId = weatherData.getWeatherId();
-                if (city == null || city.isEmpty()) city = "未知城市";
-                if (desc == null || desc.isEmpty()) desc = "未知天气";
-                String tempStr = (temp > -100 && temp < 100) ? ((int) temp + "°C") : "--°C";
-                String humidityStr = (humidity >= 0 && humidity <= 100) ? (humidity + "%") : "--%";
-                tvWeatherLocation.setText(city + "·" + desc);
-                tvWeatherDetails.setText(tempStr + " | " + humidityStr);
-                setWeatherIcon(weatherId);
-                Log.d("HomeFragment", "Set weather: " + tvWeatherLocation.getText() + " / " + tvWeatherDetails.getText());
-            } else {
-                tvWeatherLocation.setText("获取天气失败");
-                tvWeatherDetails.setText("请稍后再试");
-                ivWeatherIcon.setImageResource(R.drawable.ic_weather_routine);
-                Log.d("HomeFragment", "Set weather: 获取天气失败 / 请稍后再试");
+            String city = weatherData.getCityName();
+            String desc = weatherData.getDescription();
+            double temp = weatherData.getTemperature();
+            int humidity = weatherData.getHumidity();
+            String iconCode = weatherData.getIconCode();
+            if (city == null || city.isEmpty()) city = "未知城市";
+            if (desc == null || desc.isEmpty()) desc = "未知天气";
+            String tempStr = (temp > -100 && temp < 100) ? ((int) temp + "°C") : "--°C";
+            String humidityStr = (humidity >= 0 && humidity <= 100) ? (humidity + "%") : "--%";
+
+            if (tvWeatherLocation != null) {
+                tvWeatherLocation.setText(city);
             }
+            if (tvWeatherDescription != null) {
+                 tvWeatherDescription.setText(desc);
+            }
+            if (tvWeatherDetails != null) {
+                tvWeatherDetails.setText(tempStr + " | " + humidityStr);
+            }
+
+            setWeatherIcon(iconCode);
+            Log.d("HomeFragment", "Set weather: " + city + " / " + desc + " / " + tempStr + " | " + humidityStr);
         });
     }
 
-     // 根据 OpenWeather weatherId 设置天气图标 (保留在 Fragment 中处理，因为它涉及 UI 资源匹配)
-     // 这个方法是 UI 层的逻辑，根据 ViewModel 提供的 weatherId 选择合适的本地 Drawable 资源
-    private void setWeatherIcon(int weatherId) {
-        int iconResId;
-        // 根据 OpenWeather 的 weather condition codes 匹配本地图标
-        // 参考: https://openweathermap.org/weather-conditions
-        if (weatherId >= 200 && weatherId < 300) { // Thunderstorm (雷暴)
-            iconResId = R.drawable.ic_weather_bolt;
-        } else if (weatherId >= 300 && weatherId < 500) { // Drizzle (毛毛雨)
-            iconResId = R.drawable.ic_weather_routine; // 使用默认图标或补充 drizzle 图标
-        } else if (weatherId >= 500 && weatherId < 600) { // Rain (雨)
-             iconResId = R.drawable.ic_weather_routine; // 使用默认图标或补充 rain 图标
-        } else if (weatherId >= 600 && weatherId < 700) { // Snow (雪)
-            iconResId = R.drawable.ic_weather_snow;
-        } else if (weatherId >= 700 && weatherId < 800) { // Atmosphere (Mist, Smoke, Haze, Fog, etc. 大气现象：雾、霾等)
-            iconResId = R.drawable.ic_weather_routine; // 使用默认图标或补充 fog/mist 图标
-        } else if (weatherId == 800) { // Clear (晴朗)
-            iconResId = R.drawable.ic_weather_sunny;
-        } else if (weatherId > 800 && weatherId < 900) { // Clouds (云)
-            iconResId = R.drawable.ic_weather_cloudy;
-        } else if (weatherId >= 900) { // Extreme / Additional (极端天气)
-             iconResId = R.drawable.ic_weather_routine; // 使用默认图标或补充 extreme/additional 图标
-        } else { // Default or unknown (默认或未知)
-            iconResId = R.drawable.ic_weather_routine;
-        }
+    // 根据和风天气iconCode设置天气图标
+    private void setWeatherIcon(String iconCode) {
+        // 你可以根据iconCode映射本地drawable，或直接用和风天气的icon资源
+        // 这里假设有一套本地drawable，命名规则如ic_qweather_100, ic_qweather_101等
+        int iconResId = getResources().getIdentifier("ic_qweather_" + iconCode, "drawable", requireContext().getPackageName());
+        if (iconResId == 0) iconResId = R.drawable.ic_weather_routine; // fallback
         ivWeatherIcon.setImageResource(iconResId);
     }
-
 
     // 处理权限请求结果
     @Override
@@ -515,5 +517,22 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
                     .addToBackStack(null)
                     .commit();
         }
+    }
+
+    // 新增：显示随机推荐DialogFragment
+    private void showRandomCityDialogFragment() {
+        RandomCityDialogFragment dialog = new RandomCityDialogFragment();
+        dialog.setOnDetailClickListener((cityPinyin, cityId, cityChineseName) -> {
+            // 跳转到WebViewFragment，URL可按PlaceScraper逻辑拼接
+            // 这里只拼接城市景点列表页，实际可根据业务调整
+            String url = "https://you.ctrip.com/sight/" + cityPinyin + "/sightlist" + cityId + ".html";
+            WebViewFragment webViewFragment = WebViewFragment.newInstance(url);
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, webViewFragment)
+                .addToBackStack(null)
+                .commit();
+            dialog.dismiss();
+        });
+        dialog.show(getParentFragmentManager(), "RandomCityDialogFragment");
     }
 } 

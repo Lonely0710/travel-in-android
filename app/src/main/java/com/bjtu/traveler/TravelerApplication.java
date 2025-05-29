@@ -1,6 +1,7 @@
 package com.bjtu.traveler;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import com.airbnb.lottie.LottieComposition;
@@ -20,11 +21,13 @@ public class TravelerApplication extends Application {
     public static String BAIDU_LBS_API_KEY = null;
     public static String DEEPSEEK_API_KEY = null;
     public static String UNSPLASH_ACCESS_KEY = null; // 添加静态变量用于存储 Unsplash Access Key
-    public static String OPENWEATHER_API_KEY = null; // 添加静态变量用于存储 OpenWeather API Key
+    public static String QWEATHER_API_KEY = null; // 添加静态变量用于存储和风天气API Key
+    private static TravelerApplication sAppContext;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        sAppContext = this;
         // 初始化Bmob
         BmobUtils.initialize(this);
 
@@ -39,7 +42,7 @@ public class TravelerApplication extends Application {
             BAIDU_LBS_API_KEY = properties.getProperty("BAIDU_LBS_API_KEY");
             DEEPSEEK_API_KEY = properties.getProperty("DEEPSEEK_API_KEY");
             UNSPLASH_ACCESS_KEY = properties.getProperty("UNSPLASH_ACCESS_KEY"); // 读取 Unsplash Access Key
-            OPENWEATHER_API_KEY = properties.getProperty("OPENWEATHER_API_KEY"); // 读取 OpenWeather API Key
+            QWEATHER_API_KEY = properties.getProperty("QWEATHER_API_KEY"); // 读取和风天气API Key
             inputStream.close();
         } catch (Exception e) {
             Log.e(TAG, "读取secrets.properties失败: " + e.getMessage(), e);
@@ -89,9 +92,13 @@ public class TravelerApplication extends Application {
              Log.e(TAG, "请在 assets/secrets.properties 中设置您的 UNSPLASH_ACCESS_KEY！");
         }
 
-        // 检查 OpenWeather API Key 是否读取成功
-        if (OPENWEATHER_API_KEY == null || OPENWEATHER_API_KEY.isEmpty()) {
-            Log.e(TAG, "请在 assets/secrets.properties 中设置您的 OPENWEATHER_API_KEY！");
+        // 检查 QWeather API Key 是否读取成功
+        if (QWEATHER_API_KEY == null || QWEATHER_API_KEY.isEmpty()) {
+            Log.e(TAG, "请在 assets/secrets.properties 中设置您的 QWEATHER_API_KEY！");
         }
+    }
+
+    public static Context getAppContext() {
+        return sAppContext;
     }
 } 

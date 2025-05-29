@@ -10,7 +10,8 @@ import com.bjtu.traveler.data.repository.UserRepository;
 import com.bjtu.traveler.data.model.CityCarouselItem;
 import com.bjtu.traveler.data.repository.CityRepository;
 import com.bjtu.traveler.data.model.WeatherData;
-import com.bjtu.traveler.api.OpenWeatherApi;
+import com.bjtu.traveler.api.QWeatherApi;
+import com.bjtu.traveler.api.QWeatherGeoApi;
 import com.bjtu.traveler.TravelerApplication;
 
 import java.util.List;
@@ -89,45 +90,45 @@ public class HomeViewModel extends ViewModel {
      * @param longitude 经度
      */
     public void fetchWeatherByLocation(double latitude, double longitude) {
-        OpenWeatherApi.fetchWeatherByLocation(latitude, longitude, new OpenWeatherApi.WeatherCallback() {
-            @Override
-            public void onSuccess(String weatherJson) {
-                // 在 ViewModel 中解析 JSON 并更新 LiveData
-                try {
-                    JSONObject weatherJsonObject = new JSONObject(weatherJson);
-                    String cityName = "未知城市";
-                    String description = "未知天气";
-                    double temp = 0;
-                    int humidity = 0;
-                    int weatherId = 800;
-                    try { cityName = weatherJsonObject.optString("name", "未知城市"); } catch (Exception ignore) {}
-                    try {
-                        JSONObject main = weatherJsonObject.optJSONObject("main");
-                        if (main != null) {
-                            temp = main.optDouble("temp", 0);
-                            humidity = main.optInt("humidity", 0);
+        QWeatherGeoApi.fetchCityNameByLocation(
+            TravelerApplication.getAppContext(), latitude, longitude,
+            new QWeatherGeoApi.CityNameCallback() {
+                @Override
+                public void onSuccess(String cityName) {
+                    QWeatherApi.fetchWeatherByLocation(
+                        TravelerApplication.getAppContext(), latitude, longitude,
+                        new QWeatherApi.WeatherCallback() {
+                            @Override
+                            public void onSuccess(WeatherData data) {
+                                WeatherData newData = new WeatherData(
+                                    cityName, data.getDescription(), data.getTemperature(), data.getHumidity(), data.getIconCode()
+                                );
+                                weatherLiveData.postValue(newData);
+                            }
+                            @Override
+                            public void onError(String errorMsg) {
+                                weatherLiveData.postValue(new WeatherData(cityName, "未知天气", 0, 0, "100"));
+                            }
                         }
-                    } catch (Exception ignore) {}
-                    try {
-                        JSONObject weatherArray = weatherJsonObject.getJSONArray("weather").getJSONObject(0);
-                        description = weatherArray.optString("description", "未知天气");
-                        weatherId = weatherArray.optInt("id", 800);
-                    } catch (Exception ignore) {}
-                    WeatherData weatherData = new WeatherData(cityName, description, temp, humidity, weatherId);
-                    weatherLiveData.postValue(weatherData); // 使用 postValue 更新 LiveData
-                } catch (Exception e) {
-                    Log.e("HomeViewModel", "Error parsing weather JSON", e);
-                    // 更新 LiveData 以反映错误状态，使用默认值
-                    weatherLiveData.postValue(new WeatherData("未知城市", "未知天气", 0, 0, 800));
+                    );
+                }
+                @Override
+                public void onError(String errorMsg) {
+                    QWeatherApi.fetchWeatherByLocation(
+                        TravelerApplication.getAppContext(), latitude, longitude,
+                        new QWeatherApi.WeatherCallback() {
+                            @Override
+                            public void onSuccess(WeatherData data) {
+                                weatherLiveData.postValue(data);
+                            }
+                            @Override
+                            public void onError(String errorMsg) {
+                                weatherLiveData.postValue(new WeatherData("", "未知天气", 0, 0, "100"));
+                            }
+                        }
+                    );
                 }
             }
-
-            @Override
-            public void onError(String errorMessage) {
-                Log.e("HomeViewModel", "Error fetching weather data: " + errorMessage);
-                // 更新 LiveData 以反映错误状态，使用默认值
-                weatherLiveData.postValue(new WeatherData("未知城市", "未知天气", 0, 0, 800));
-            }
-        });
+        );
     }
 } 
