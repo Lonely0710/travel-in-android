@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>高德地图旅游点标注</title>
+    <!-- 链接到外部CSS文件 -->
+    <link rel="stylesheet" href="css/style.css">
+    <script type="text/javascript">
+        window._AMapSecurityConfig = {
+            securityJsCode: "YOUR_SECURITY_CODE" // 请替换为你的高德安全密钥
+        };
+    </script>
+    <!-- 引入高德地图API -->
+    <script src="https://webapi.amap.com/maps?v=2.0&key=YOUR_GAODE_KEY"></script> <!-- 请替换为你的高德Key -->
+</head>
+
+<body>
+    <div id="city-title"></div>
+    <div id="search-bar">
+        <input id="search-input" type="text" placeholder="输入关键词" />
+        <button id="search-btn" class="search-btn">
+            <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="11" cy="11" r="7" stroke="#fff" stroke-width="2" />
+                <path d="M20 20L16.65 16.65" stroke="#fff" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            关键词
+        </button>
+        <button id="around-btn" class="search-btn">
+            <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2" />
+                <circle cx="12" cy="12" r="3" stroke="#fff" stroke-width="2" />
+                <path d="M12 3V1M12 23V21M21 12H23M1 12H3" stroke="#fff" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            周边
+        </button>
+    </div>
+    <div id="container"></div>
+    <div id="infoCard">
+        <div id="cardContent"></div>
+    </div>
+
+    <!-- 链接到外部JavaScript文件 -->
+    <script src="js/script.js"></script>
+</body>
+
+</html>

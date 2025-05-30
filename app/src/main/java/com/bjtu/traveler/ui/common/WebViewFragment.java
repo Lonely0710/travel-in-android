@@ -154,6 +154,18 @@ public class WebViewFragment extends Fragment {
                          if (lowerCaseUrl.contains("airbnb")) {
                              ivTitleIcon.setImageResource(R.drawable.ic_web_airbnb);
                              ivTitleIcon.setVisibility(View.VISIBLE);
+                         } else if (lowerCaseUrl.contains("amap") || lowerCaseUrl.contains("gaode")) {
+                             ivTitleIcon.setImageResource(R.drawable.ic_web_gaode);
+                             ivTitleIcon.setVisibility(View.VISIBLE);
+                             // 设置高德专属topbar背景色
+                             View topBar = getView().findViewById(R.id.topbar_webview);
+                             if (topBar != null) {
+                                 topBar.setBackgroundColor(0xFF262B46);
+                             }
+                             // 设置返回按钮为白色
+                             if (btnBack != null) {
+                                 btnBack.setImageResource(R.drawable.ic_arrow_left_white);
+                             }
                          } else if (lowerCaseUrl.contains("feizhu")) {
                              ivTitleIcon.setImageResource(R.drawable.ic_web_feizhu);
                              ivTitleIcon.setVisibility(View.VISIBLE);

@@ -6,4 +6,11 @@
         <item name="android:navigationBarColor">@color/color_primary</item>
     </style>
     <!-- 其他style ... -->
+
+    <!-- Dialog Animation Style -->
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/dialog_slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/dialog_slide_out_bottom</item>
+    </style>
+
 </resources> 

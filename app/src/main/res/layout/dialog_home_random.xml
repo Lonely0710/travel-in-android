@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/rounded_corner_background"
+    android:padding="24dp">
+
+    <!-- 顶部骰子icon和标题 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <!-- 左侧占位符 -->
+        <View
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_weight="1" />
+            
+        <TextView
+            android:id="@+id/tv_random_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/pacifico"
+            android:text="Where to go?"
+            android:textColor="@color/color_primary"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/iv_dialog_close"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_close"
+            app:tint="@color/text_secondary"
+            android:clickable="true"
+            android:focusable="true"/>
+
+    </LinearLayout>
+
+    <!-- 提示语 -->
+    <TextView
+        android:id="@+id/tv_random_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="点击骰子，发现意想不到的旅行目的地"
+        android:textColor="@color/text_primary"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_marginBottom="18dp" />
+
+    <!-- 推荐目的地高亮卡片 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_card_highlight"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="18dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginTop="4dp">
+        <TextView
+            android:id="@+id/tv_random_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="贵州黄果树瀑布"
+            android:textColor="#FF7A3A"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/fangzheng"
+            android:gravity="center_horizontal" />
+    </LinearLayout>
+
+    <!-- 按钮区 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="8dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
+
+        <!-- 再试一次按钮 -->
+        <LinearLayout
+            android:id="@+id/btn_random_retry"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@drawable/rounded_stroke_background"
+            android:layout_marginEnd="8dp"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_refresh"
+                android:tint="@color/color_primary"
+                android:layout_marginEnd="2dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="再试一次"
+                android:textColor="@color/color_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- 查看详情按钮 -->
+        <LinearLayout
+            android:id="@+id/btn_random_detail"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@drawable/rounded_green_background"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_sightseeing"
+                android:tint="@color/white"
+                android:layout_marginEnd="2dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="查看详情"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout> 

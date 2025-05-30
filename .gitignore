@@ -16,5 +16,6 @@
 local.properties
 /logs
 /app/src/main/assets/secrets.properties
+/app/src/main/assets/gaode/index.html
 /reference
 /app/release

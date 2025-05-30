@@ -365,7 +365,7 @@
                                     android:maxEms="2"
                                     android:maxLines="2"
                                     android:ellipsize="none"
-                                    android:breakStrategy="highQuality"
+                                    android:breakStrategy="high_quality"
                                     android:hyphenationFrequency="full"
                                 />
 
