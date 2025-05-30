@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/homeCardContainer"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:id="@+id/ll_weather_main_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <TextView
+                android:id="@+id/tv_weather_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:textSize="24sp"
+                android:textColor="@color/color_primary"
+                android:text="\uF146"
+                android:contentDescription="天气图标"/>
+            <TextView
+                android:id="@+id/tv_weather_temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="21°C"
+                style="@style/homeCardWeatherTemp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_weather_city_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="深圳市，晴"
+            style="@style/homeCardWeatherDesc"
+            android:layout_marginTop="4dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <!-- First row: Icons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_marginBottom="4dp">
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="18dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_weather_thermostat"
+                    android:contentDescription="湿度icon"/>
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="18dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_weather_windy"
+                    android:contentDescription="风速icon"/>
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="18dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_weather_pressure"
+                    android:contentDescription="气压icon"/>
+            </LinearLayout>
+
+            <!-- Second row: Data -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                 android:gravity="center_vertical|center_horizontal">
+                 <TextView
+                    android:id="@+id/tv_weather_humidity"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="72%"
+                    style="@style/homeCardWeatherDetail"/>
+                <TextView
+                    android:id="@+id/tv_weather_wind"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="12km/h"
+                    style="@style/homeCardWeatherDetail"/>
+                <TextView
+                    android:id="@+id/tv_weather_pressure"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="1013hPa"
+                    style="@style/homeCardWeatherDetail"/>
+            </LinearLayout>
+
+             <!-- Third row: Labels -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                 android:gravity="center_vertical|center_horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="湿度"
+                    style="@style/homeCardWeatherDetail"
+                    android:textSize="10sp"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="风速"
+                    style="@style/homeCardWeatherDetail"
+                    android:textSize="10sp"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="气压"
+                    style="@style/homeCardWeatherDetail"
+                    android:textSize="10sp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Add Lottie Animation View for loading -->
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_weather_loading_internal"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        app:lottie_rawRes="@raw/weather_longmao"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true"
+        android:layout_gravity="center"
+        android:visibility="visible" />
+
+</com.google.android.material.card.MaterialCardView> 

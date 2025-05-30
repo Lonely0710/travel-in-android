@@ -101,13 +101,13 @@ public class HomeViewModel extends ViewModel {
                             @Override
                             public void onSuccess(WeatherData data) {
                                 WeatherData newData = new WeatherData(
-                                    cityName, data.getDescription(), data.getTemperature(), data.getHumidity(), data.getIconCode()
+                                    cityName, data.getDescription(), data.getTemperature(), data.getHumidity(), data.getIconCode(), data.getWindSpeed(), data.getPressure()
                                 );
                                 weatherLiveData.postValue(newData);
                             }
                             @Override
                             public void onError(String errorMsg) {
-                                weatherLiveData.postValue(new WeatherData(cityName, "未知天气", 0, 0, "100"));
+                                weatherLiveData.postValue(new WeatherData(cityName, "未知天气", 0, 0, "100", 0, 0));
                             }
                         }
                     );
@@ -123,7 +123,7 @@ public class HomeViewModel extends ViewModel {
                             }
                             @Override
                             public void onError(String errorMsg) {
-                                weatherLiveData.postValue(new WeatherData("", "未知天气", 0, 0, "100"));
+                                weatherLiveData.postValue(new WeatherData("", "未知天气", 0, 0, "100", 0, 0));
                             }
                         }
                     );

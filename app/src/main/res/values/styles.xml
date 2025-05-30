@@ -5,12 +5,63 @@
         <item name="android:statusBarColor">@color/color_primary</item>
         <item name="android:navigationBarColor">@color/color_primary</item>
     </style>
-    <!-- 其他style ... -->
 
     <!-- Dialog Animation Style -->
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/dialog_slide_in_bottom</item>
         <item name="android:windowExitAnimation">@anim/dialog_slide_out_bottom</item>
+    </style>
+
+    <!-- Home页卡片样式 -->
+    <style name="homeCardContainer">
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="android:background">@color/white</item>
+    </style>
+    <style name="homeCardWeatherTemp">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:layout_marginStart">12dp</item>
+    </style>
+    <style name="homeCardWeatherDesc">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+    <style name="homeCardWeatherDetail">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="homeCardAiTitle">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="homeCardAiDesc">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_marginTop">2dp</item>
+    </style>
+    <style name="homeCardAiButton">
+        <item name="android:background">@drawable/bg_home_ai_button</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:paddingLeft">24dp</item>
+        <item name="android:paddingRight">24dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+    </style>
+    <style name="homeCardExploreContainer">
+        <item name="cardCornerRadius">20dp</item>
+        <item name="cardElevation">6dp</item>
+        <item name="android:background">@color/explore_card_bg</item>
+    </style>
+    <style name="homeCardExploreTitle">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
 </resources> 

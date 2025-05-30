@@ -62,7 +62,9 @@ public class QWeatherApi {
                     double temp = now.optDouble("temp", 0);
                     int humidity = now.optInt("humidity", 0);
                     String iconCode = now.optString("icon", "100");
-                    WeatherData data = new WeatherData(cityName, description, temp, humidity, iconCode);
+                    double windSpeed = now.optDouble("windSpeed", 0); // 单位km/h
+                    int pressure = now.optInt("pressure", 0); // 单位hPa
+                    WeatherData data = new WeatherData(cityName, description, temp, humidity, iconCode, windSpeed, pressure);
                     callback.onSuccess(data);
                 } catch (Exception e) {
                     callback.onError("JSON解析失败: " + e.getMessage());

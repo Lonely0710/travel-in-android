@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/homeCardExploreContainer"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="32dp"
+        android:background="@drawable/bg_explore_card_gradient">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <ImageView
+                android:id="@+id/iv_explore_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_radar"
+                android:contentDescription="探索世界图标"
+                app:tint="@color/white"
+                android:layout_gravity="center_vertical"
+                android:paddingVertical="0dp"
+                android:layout_marginTop="1dp"/>
+            <TextView
+                android:id="@+id/tv_explore_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="探索世界"
+                style="@style/homeCardExploreTitle"
+                android:layout_marginStart="8dp"
+                android:layout_gravity="center_vertical"
+                android:paddingVertical="0dp"
+                android:includeFontPadding="false"
+                android:layout_marginTop="-1dp"/>
+        </LinearLayout>
+
+        <!-- EXPLORE按钮-->
+        <LinearLayout
+            android:id="@+id/btn_get_recommendations"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/bg_home_explore_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <ImageView
+                android:id="@+id/iv_btn_explore"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_btn_travel"
+                app:tint="@color/white" />
+
+            <TextView
+                android:id="@+id/tv_btn_explore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="EXPLORE"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView> 

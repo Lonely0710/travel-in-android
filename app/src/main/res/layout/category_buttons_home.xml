@@ -96,7 +96,7 @@
             android:layout_height="44dp"
             android:background="@drawable/bg_category_circle_elev"
             android:elevation="6dp"
-            android:src="@drawable/ic_heart"
+            android:src="@drawable/ic_spire"
             android:tint="@color/color_primary"
             android:padding="8dp" />
         <TextView

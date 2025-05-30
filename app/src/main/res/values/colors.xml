@@ -21,4 +21,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="white_30">#4DFFFFFF</color>
+    <!-- 主页卡片颜色 -->
+    <color name="card_ai_assistant_bg">#2C3A4B</color>
+    <color name="ai_icon">#007A8C</color>
+    <color name="explore_card_bg">#2196F3</color>
+    <color name="explore_btn_text">#2196F3</color>
+    <color name="divider_dark">#3A4A5E</color>
 </resources>

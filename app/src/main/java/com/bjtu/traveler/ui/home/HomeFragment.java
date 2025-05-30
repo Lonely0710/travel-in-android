@@ -2,16 +2,20 @@ package com.bjtu.traveler.ui.home;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,8 +23,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -34,7 +38,9 @@ import com.bjtu.traveler.data.model.WeatherData;
 import com.bjtu.traveler.ui.common.WebViewFragment;
 import com.bjtu.traveler.ui.explore.ExploreFragment;
 import com.bjtu.traveler.ui.profile.ProfileFragment;
+import com.bjtu.traveler.ui.routes.RoutesFragment;
 import com.bjtu.traveler.utils.FragmentSwitcher;
+import com.bjtu.traveler.utils.QWeatherIconMapper;
 import com.bjtu.traveler.viewmodel.HomeViewModel;
 import com.bjtu.traveler.viewmodel.UserViewModel;
 import com.bumptech.glide.Glide;
@@ -46,7 +52,6 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
-
 
 /**
  * HomeFragment 类，首页 Fragment
@@ -64,11 +69,9 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
     private ImageView btnBannerLeft;
     private ImageView btnBannerRight;
 
-    private LinearLayout llWeather;
-    private ImageView ivWeatherIcon;
-    private TextView tvWeatherLocation;
-    private TextView tvWeatherDetails;
-    private TextView tvWeatherDescription;
+    private TextView tvWeatherIcon; // 天气图标 TextView
+    private TextView tvWeatherLocation; // 城市和天气描述 TextView
+    private TextView tvWeatherDetails; // 温度 TextView
 
     private EditText etSearch;
     private ImageView ivDice;
@@ -76,6 +79,8 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
     private LinearLayout btnGetRecommendations;
     private ImageView ivBtnExplore;
     private TextView tvBtnExplore;
+
+    private LinearLayout btnAiPlan;
 
     private Handler autoScrollHandler;
     private Runnable autoScrollRunnable;
@@ -90,6 +95,10 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
     // 位置权限请求码
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
 
+    private Typeface qWeatherIconFont; // 新增：字体变量
+
+    private LinearLayout llWeatherContent; // 新增：天气详情容器
+    private com.airbnb.lottie.LottieAnimationView lottieWeatherLoadingInternal; // 新增：内嵌的 Lottie 动画
 
     @Nullable
     @Override
@@ -108,11 +117,9 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
         ImageView ivAvatar = root.findViewById(R.id.iv_avatar);
         TextView tvHiUser = root.findViewById(R.id.tv_hi_user);
         TextView tvPoints = root.findViewById(R.id.tv_points);
-        llWeather = root.findViewById(R.id.ll_weather);
-        ivWeatherIcon = root.findViewById(R.id.iv_weather_icon);
-        tvWeatherLocation = root.findViewById(R.id.tv_weather_location);
-        tvWeatherDetails = root.findViewById(R.id.tv_weather_details);
-        tvWeatherDescription = root.findViewById(R.id.tv_weather_description);
+        tvWeatherIcon = root.findViewById(R.id.tv_weather_icon);
+        tvWeatherLocation = root.findViewById(R.id.tv_weather_city_desc);
+        tvWeatherDetails = root.findViewById(R.id.tv_weather_temp);
         etSearch = root.findViewById(R.id.et_search);
         ivDice = root.findViewById(R.id.iv_dice);
         cityCarouselViewPager = root.findViewById(R.id.city_carousel_viewpager);
@@ -122,26 +129,38 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
         btnGetRecommendations = root.findViewById(R.id.btn_get_recommendations);
         ivBtnExplore = root.findViewById(R.id.iv_btn_explore);
         tvBtnExplore = root.findViewById(R.id.tv_btn_explore);
+        btnAiPlan = root.findViewById(R.id.btn_ai_plan);
+
+        // 在 weather_card_content 布局中查找内嵌的 View
+        View weatherCardRoot = root.findViewById(R.id.weather_card_content); // 查找 included layout 的根 View
+        if (weatherCardRoot != null) {
+            tvWeatherIcon = weatherCardRoot.findViewById(R.id.tv_weather_icon);
+            tvWeatherDetails = weatherCardRoot.findViewById(R.id.tv_weather_temp);
+            llWeatherContent = weatherCardRoot.findViewById(R.id.ll_weather_main_content); // 查找天气详情容器
+            lottieWeatherLoadingInternal = weatherCardRoot.findViewById(R.id.lottie_weather_loading_internal); // 查找内嵌 Lottie 动画
+
+            // 查找城市/描述 TextView，它在 ll_weather_content 内部
+            if (llWeatherContent != null) {
+                 tvWeatherLocation = llWeatherContent.findViewById(R.id.tv_weather_city_desc);
+            }
+        }
 
         DrawerLayout drawerLayout = requireActivity().findViewById(R.id.drawer_layout);
 
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
 
-        // 新增：天气卡片加载动画
-        com.airbnb.lottie.LottieAnimationView lottieWeatherLoading = root.findViewById(R.id.lottie_weather_loading);
-
         // 新增：城市轮播图加载动画
         com.airbnb.lottie.LottieAnimationView lottieLoading = root.findViewById(R.id.lottie_loading);
 
         // 确保天气内容区初始不可见，无论 ViewModel 状态如何
-        if (llWeather != null) {
-            llWeather.setVisibility(View.GONE);
+        if (llWeatherContent != null) {
+            llWeatherContent.setVisibility(View.GONE);
         }
         // 初始时显示天气加载动画
-        if (lottieWeatherLoading != null) {
-             lottieWeatherLoading.setVisibility(View.VISIBLE);
-             lottieWeatherLoading.playAnimation();
+        if (lottieWeatherLoadingInternal != null) {
+             lottieWeatherLoadingInternal.setVisibility(View.VISIBLE);
+             lottieWeatherLoadingInternal.playAnimation();
         }
 
         // 初始化位置服务相关
@@ -152,6 +171,19 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
         cityCarouselAdapter = new CityCarouselAdapter(new ArrayList<>());
         cityCarouselViewPager.setAdapter(cityCarouselAdapter);
         cityCarouselAdapter.setOnCityItemClickListener(this);
+        
+        // 加载和风天气图标字体
+        try {
+            // 从 res/font 目录加载字体
+            qWeatherIconFont = ResourcesCompat.getFont(requireContext(), R.font.qweather_icons);
+            if (qWeatherIconFont == null) {
+                Log.e(TAG, "Failed to load qweather_icons.ttf font.");
+                // 处理字体加载失败的情况
+            }
+        } catch (Exception e) {
+             Log.e(TAG, "Error loading qweather-icons.ttf", e); // 日志名称可以保留，或者改为 qweather_icons.ttf
+             // 字体加载失败时的处理，例如显示默认图标或文字
+        }
         
         homeViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
@@ -258,21 +290,28 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
             });
         }
 
+        // 新增：AI助手按钮点击事件
+        if (btnAiPlan != null) {
+            btnAiPlan.setOnClickListener(v -> {
+                // 跳转到路线页面
+                FragmentSwitcher.switchFragmentAndSelectItem(requireActivity(), new RoutesFragment(), "RoutesFragment", R.id.nav_routes);
+            });
+        }
+
         // 确保在findViewById之后注册weatherLiveData观察者
         homeViewModel.getWeatherLiveData().observe(getViewLifecycleOwner(), weatherData -> {
-            // updateWeatherUI(weatherData); // 不在这里直接调用 updateWeatherUI
             // 新增：根据weatherData切换动画和内容
-            if (lottieWeatherLoading != null && llWeather != null) {
+            if (lottieWeatherLoadingInternal != null && llWeatherContent != null) {
                 if (weatherData == null) {
                     // 数据未加载或加载失败，显示动画
-                    lottieWeatherLoading.setVisibility(View.VISIBLE);
-                    lottieWeatherLoading.playAnimation();
-                    llWeather.setVisibility(View.GONE);
+                    lottieWeatherLoadingInternal.setVisibility(View.VISIBLE);
+                    lottieWeatherLoadingInternal.playAnimation();
+                    llWeatherContent.setVisibility(View.GONE); // 隐藏天气详情
                 } else {
                     // 数据加载成功，隐藏动画，显示内容，并更新UI
-                    lottieWeatherLoading.cancelAnimation();
-                    lottieWeatherLoading.setVisibility(View.GONE);
-                    llWeather.setVisibility(View.VISIBLE);
+                    lottieWeatherLoadingInternal.cancelAnimation();
+                    lottieWeatherLoadingInternal.setVisibility(View.GONE);
+                    llWeatherContent.setVisibility(View.VISIBLE); // 显示天气详情
                     updateWeatherUI(weatherData); // 数据加载成功后再更新UI
                 }
             }
@@ -361,12 +400,19 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
     // 根据 ViewModel 提供的 WeatherData 更新 UI
     // 这个方法现在只负责实际更新UI元素的内容，不控制可见性
     private void updateWeatherUI(WeatherData weatherData) {
-        Log.d("HomeFragment", "updateWeatherUI called, weatherData=" + (weatherData == null ? "null" : weatherData.getCityName() + "," + weatherData.getDescription() + "," + weatherData.getTemperature() + "," + weatherData.getHumidity() + "," + weatherData.getIconCode()));
+        Log.d("HomeFragment", "updateWeatherUI called, weatherData=" + (weatherData == null ? "null" : weatherData.toString()));
         if (!isAdded() || getActivity() == null || weatherData == null) {
             Log.d("HomeFragment", "Fragment not attached, or weatherData is null, skip UI update");
             if (tvWeatherLocation != null) tvWeatherLocation.setText("");
-            if (tvWeatherDescription != null) tvWeatherDescription.setText("");
             if (tvWeatherDetails != null) tvWeatherDetails.setText("");
+            if (getView() != null) {
+                TextView tvHumidity = getView().findViewById(R.id.tv_weather_humidity);
+                TextView tvWind = getView().findViewById(R.id.tv_weather_wind);
+                TextView tvPressure = getView().findViewById(R.id.tv_weather_pressure);
+                if (tvHumidity != null) tvHumidity.setText("");
+                if (tvWind != null) tvWind.setText("");
+                if (tvPressure != null) tvPressure.setText("");
+            }
             return;
         }
         requireActivity().runOnUiThread(() -> {
@@ -375,33 +421,93 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
             double temp = weatherData.getTemperature();
             int humidity = weatherData.getHumidity();
             String iconCode = weatherData.getIconCode();
+            double windSpeed = weatherData.getWindSpeed();
+            int pressure = weatherData.getPressure();
             if (city == null || city.isEmpty()) city = "未知城市";
             if (desc == null || desc.isEmpty()) desc = "未知天气";
+
+            String cityAndDesc = city;
+            if (!desc.equals("未知天气")) { // 如果描述不是默认值，则添加到城市后面
+                 cityAndDesc += "，" + desc;
+            }
+
             String tempStr = (temp > -100 && temp < 100) ? ((int) temp + "°C") : "--°C";
-            String humidityStr = (humidity >= 0 && humidity <= 100) ? (humidity + "%") : "--%";
+
+            // 构建湿度字符串并应用样式
+            String humidityValue = (humidity >= 0 && humidity <= 100) ? String.valueOf(humidity) : "--";
+            String humidityUnit = "%";
+            SpannableString humiditySpannable = new SpannableString(humidityValue + humidityUnit);
+            int humidityUnitStart = humidityValue.length();
+            int humidityUnitEnd = humiditySpannable.length();
+            // 设置湿度数值颜色为蓝色
+            humiditySpannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.explore_card_bg)), 0, humidityValue.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            // 设置湿度单位样式
+            humiditySpannable.setSpan(new RelativeSizeSpan(0.7f), humidityUnitStart, humidityUnitEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE); // 缩小字体
+            humiditySpannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.text_secondary)), humidityUnitStart, humidityUnitEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE); // 设置颜色
+
+            // 构建风速字符串并应用样式
+            String windValue = (windSpeed >= 0 && windSpeed < 200) ? String.format("%.1f", windSpeed) : "--";
+            String windUnit = "km/h";
+            SpannableString windSpannable = new SpannableString(windValue + windUnit);
+            int windUnitStart = windValue.length();
+            int windUnitEnd = windSpannable.length();
+             // 设置风速单位样式
+            windSpannable.setSpan(new RelativeSizeSpan(0.7f), windUnitStart, windUnitEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE); // 缩小字体
+            windSpannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.text_secondary)), windUnitStart, windUnitEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE); // 设置颜色
+
+            // 构建气压字符串并应用样式
+            String pressureValue = (pressure > 0 && pressure < 2000) ? String.valueOf(pressure) : "--";
+            String pressureUnit = "hPa";
+             SpannableString pressureSpannable = new SpannableString(pressureValue + pressureUnit);
+            int pressureUnitStart = pressureValue.length();
+            int pressureUnitEnd = pressureSpannable.length();
+             // 设置气压单位样式
+            pressureSpannable.setSpan(new RelativeSizeSpan(0.7f), pressureUnitStart, pressureUnitEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE); // 缩小字体
+            pressureSpannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.text_secondary)), pressureUnitStart, pressureUnitEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE); // 设置颜色
 
             if (tvWeatherLocation != null) {
-                tvWeatherLocation.setText(city);
-            }
-            if (tvWeatherDescription != null) {
-                 tvWeatherDescription.setText(desc);
+                tvWeatherLocation.setText(cityAndDesc);
             }
             if (tvWeatherDetails != null) {
-                tvWeatherDetails.setText(tempStr + " | " + humidityStr);
+                tvWeatherDetails.setText(tempStr);
             }
-
+            View root = getView();
+            if (root != null) {
+                TextView tvHumidity = root.findViewById(R.id.tv_weather_humidity);
+                TextView tvWind = root.findViewById(R.id.tv_weather_wind);
+                TextView tvPressure = root.findViewById(R.id.tv_weather_pressure);
+                if (tvHumidity != null) tvHumidity.setText(humiditySpannable); // 使用 SpannableString
+                if (tvWind != null) tvWind.setText(windSpannable); // 使用 SpannableString
+                if (tvPressure != null) tvPressure.setText(pressureSpannable); // 使用 SpannableString
+            }
             setWeatherIcon(iconCode);
-            Log.d("HomeFragment", "Set weather: " + city + " / " + desc + " / " + tempStr + " | " + humidityStr);
+            Log.d("HomeFragment", "Set weather: " + city + " / " + desc + " / " + tempStr + " | " + humidity + "% | " + windSpeed + "km/h | " + pressure + "hPa"); // Log with raw values
         });
     }
 
     // 根据和风天气iconCode设置天气图标
     private void setWeatherIcon(String iconCode) {
-        // 你可以根据iconCode映射本地drawable，或直接用和风天气的icon资源
-        // 这里假设有一套本地drawable，命名规则如ic_qweather_100, ic_qweather_101等
-        int iconResId = getResources().getIdentifier("ic_qweather_" + iconCode, "drawable", requireContext().getPackageName());
-        if (iconResId == 0) iconResId = R.drawable.ic_weather_routine; // fallback
-        ivWeatherIcon.setImageResource(iconResId);
+        if (tvWeatherIcon != null && qWeatherIconFont != null) {
+            tvWeatherIcon.setTypeface(qWeatherIconFont); // 设置字体
+
+            String iconCharacter = QWeatherIconMapper.getIconCharacter(iconCode); // 获取对应的字符
+
+            if (iconCharacter != null && !iconCharacter.equals("?")) { // 检查是否找到有效字符，排除默认的问号
+                tvWeatherIcon.setText(iconCharacter); // 设置文本为图标字符
+                tvWeatherIcon.setVisibility(View.VISIBLE); // 如果找到有效图标，确保 TextView 可见
+            } else {
+                // 如果找不到对应的图标字符，可以设置一个默认文本或隐藏 TextView
+                tvWeatherIcon.setText("?"); // 例如设置为问号
+                tvWeatherIcon.setVisibility(View.VISIBLE); // 显示问号提示
+                // 或者 tvWeatherIcon.setVisibility(View.GONE); // 或者直接隐藏
+            }
+             // 可以根据需要设置图标颜色，例如从天气数据中获取或固定颜色
+             // tvWeatherIcon.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary));
+        } else if (tvWeatherIcon != null) {
+             // 如果字体加载失败，可以设置一个默认文本或隐藏 TextView
+             tvWeatherIcon.setText("?");
+             tvWeatherIcon.setVisibility(View.VISIBLE); // 显示问号提示
+        }
     }
 
     // 处理权限请求结果
