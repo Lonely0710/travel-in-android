@@ -24,9 +24,8 @@
                 android:id="@+id/iv_explore_icon"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@drawable/ic_radar"
+                android:src="@drawable/ic_travel_plane"
                 android:contentDescription="探索世界图标"
-                app:tint="@color/white"
                 android:layout_gravity="center_vertical"
                 android:paddingVertical="0dp"
                 android:layout_marginTop="1dp"/>

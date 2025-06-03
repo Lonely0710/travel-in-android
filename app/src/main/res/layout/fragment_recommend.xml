@@ -37,82 +37,103 @@
             android:layout_marginTop="8dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-        <LinearLayout
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/gradient_divider_horizontal"/>
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp">
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_hot"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:checked="true"
-                android:text="热门"
-                android:layout_width="0dp"
+            android:layout_marginTop="8dp">
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textAlignment="center"
-                android:paddingStart="0dp"
-                android:paddingEnd="0dp"
-                android:textSize="12sp"
-                android:textColor="@android:color/black"
-                app:chipIcon="@drawable/ic_fire"
-                app:chipIconSize="16dp"
-                app:chipIconVisible="true"/>
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_adventure"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:text="探险"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textAlignment="center"
-                android:paddingStart="0dp"
-                android:paddingEnd="0dp"
-                android:layout_marginStart="8dp"
-                android:textSize="12sp"
-                android:textColor="@android:color/black"
-                app:chipIcon="@drawable/ic_adventure"
-                app:chipIconSize="16dp"
-                app:chipIconVisible="true"/>
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_relax"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:text="放松"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textAlignment="center"
-                android:paddingStart="0dp"
-                android:paddingEnd="0dp"
-                android:layout_marginStart="8dp"
-                android:textSize="12sp"
-                android:textColor="@android:color/black"
-                app:chipIcon="@drawable/ic_relax"
-                app:chipIconSize="16dp"
-                app:chipIconVisible="true"/>
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_culture"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:text="文化"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textAlignment="center"
-                android:paddingStart="0dp"
-                android:paddingEnd="0dp"
-                android:layout_marginStart="8dp"
-                android:textSize="12sp"
-                android:textColor="@android:color/black"
-                app:chipIcon="@drawable/ic_culture"
-                app:chipIconSize="16dp"
-                app:chipIconVisible="true"/>
-        </LinearLayout>
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_hot"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:text="热门"
+                    android:textAlignment="center"
+                    android:textColor="@color/chip_category_text_selector"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:chipBackgroundColor="@color/chip_category_selector"
+                    app:chipIcon="@drawable/ic_chip_fire"
+                    app:chipIconSize="18dp"
+                    app:chipIconTint="@color/chip_category_text_selector"
+                    app:chipIconVisible="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_adventure"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="探险"
+                    android:textAlignment="center"
+                    android:textColor="@color/chip_category_text_selector"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:chipBackgroundColor="@color/chip_category_selector"
+                    app:chipIcon="@drawable/ic_chip_adventure"
+                    app:chipIconSize="18dp"
+                    app:chipIconTint="@color/chip_category_text_selector"
+                    app:chipIconVisible="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_relax"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="休闲"
+                    android:textAlignment="center"
+                    android:textColor="@color/chip_category_text_selector"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:chipBackgroundColor="@color/chip_category_selector"
+                    app:chipIcon="@drawable/ic_chip_relax"
+                    app:chipIconSize="18dp"
+                    app:chipIconTint="@color/chip_category_text_selector"
+                    app:chipIconVisible="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_culture"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="文化"
+                    android:textAlignment="center"
+                    android:textColor="@color/chip_category_text_selector"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:chipBackgroundColor="@color/chip_category_selector"
+                    app:chipIcon="@drawable/ic_chip_culture"
+                    app:chipIconSize="18dp"
+                    app:chipIconTint="@color/chip_category_text_selector"
+                    app:chipIconVisible="true" />
+            </LinearLayout>
+        </FrameLayout>
 
         <!-- 推荐区 -->
         <LinearLayout
