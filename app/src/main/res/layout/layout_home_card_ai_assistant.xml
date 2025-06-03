@@ -24,8 +24,7 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:src="@drawable/ic_robot"
-                android:contentDescription="AI助手图标"
-                app:tint="@color/ai_icon" />
+                android:contentDescription="AI助手图标"/>
             <TextView
                 android:id="@+id/tv_ai_title"
                 android:layout_width="wrap_content"

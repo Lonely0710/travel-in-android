@@ -99,12 +99,6 @@ public class ExploreFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // 修复 fragment 重叠：主动 detach 子 fragment
-        if (getChildFragmentManager() != null) {
-            for (androidx.fragment.app.Fragment f : getChildFragmentManager().getFragments()) {
-                getChildFragmentManager().beginTransaction().remove(f).commitAllowingStateLoss();
-            }
-        }
     }
 
     @Override

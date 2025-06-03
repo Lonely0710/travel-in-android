@@ -25,6 +25,8 @@ import com.bjtu.traveler.data.model.Post;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import java.io.IOException;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 public class PostFragment extends Fragment {
     private static final int REQUEST_IMAGE_PICK = 1001;
@@ -38,9 +40,7 @@ public class PostFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_post, container, false);
         EditText etTitle = view.findViewById(R.id.et_post_title);
         EditText etContent = view.findViewById(R.id.et_post_content);
-        Button btnSelectImage = view.findViewById(R.id.btn_select_image);
         Button btnSubmit = view.findViewById(R.id.btn_submit_post);
-        ivSelectedImage = view.findViewById(R.id.iv_selected_image);
 
         // 新的图片选择回调
         imagePickerLauncher = registerForActivityResult(
@@ -60,11 +60,6 @@ public class PostFragment extends Fragment {
                 }
             }
         );
-
-        btnSelectImage.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            imagePickerLauncher.launch(intent);
-        });
 
         btnSubmit.setOnClickListener(v -> {
             String title = etTitle.getText().toString().trim();
@@ -87,6 +82,19 @@ public class PostFragment extends Fragment {
                 .replace(R.id.fragment_container, new DiscoverFragment())
                 .commit();
         });
+
+        // 新增：返回按钮点击事件
+        ImageButton btnBack = view.findViewById(R.id.btn_back);
+        btnBack.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager().popBackStack();
+        });
+
+        // 新增：标记地点行点击事件
+        LinearLayout layoutMarkLocation = view.findViewById(R.id.layout_location);
+        layoutMarkLocation.setOnClickListener(v -> {
+            Toast.makeText(getContext(), "标记地点", Toast.LENGTH_SHORT).show();
+        });
+
         return view;
     }
 }
