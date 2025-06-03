@@ -103,11 +103,12 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
+                android:layout_alignParentBottom="true"
                 android:gravity="center_vertical">
 
                 <ImageView
@@ -130,7 +131,5 @@
             </LinearLayout>
 
         </RelativeLayout>
-
     </LinearLayout>
-</com.google.android.material.card.MaterialCardView>
-
+</com.google.android.material.card.MaterialCardView> 

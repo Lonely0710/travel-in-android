@@ -12,9 +12,20 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import java.util.List;
 import java.util.Locale;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.HashMap;
+
+import com.bjtu.traveler.data.model.Post;
+import com.bjtu.traveler.data.model.User;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 
 /**
- * 探索区定位与地理信息的 ViewModel
+ * 探索区定位与地理信息，以及帖子数据的 ViewModel
  */
 public class ExploreViewModel extends ViewModel {
     // 当前城市和国家
@@ -23,6 +34,11 @@ public class ExploreViewModel extends ViewModel {
     private final MutableLiveData<Location> lastKnownLocation = new MutableLiveData<>();
     private LocationManager locationManager;
     private LocationListener locationListener;
+
+    // LiveData for Post data
+    private final MutableLiveData<List<Post>> postList = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isLoadingPosts = new MutableLiveData<>(false);
+    private final MutableLiveData<String> postErrorMessage = new MutableLiveData<>(null);
 
     // 获取当前城市
     public LiveData<String> getCurrentCity() {
@@ -36,6 +52,17 @@ public class ExploreViewModel extends ViewModel {
     public LiveData<Location> getLastKnownLocation() {
         return lastKnownLocation;
     }
+
+    // 获取帖子列表
+    public LiveData<List<Post>> getPostList() {
+        return postList;
+    }
+
+    // 获取帖子加载状态
+    public LiveData<Boolean> isLoadingPosts() { return isLoadingPosts; }
+
+    // 获取帖子错误信息
+    public LiveData<String> getPostErrorMessage() { return postErrorMessage; }
 
     // 启动定位监听
     public void startLocationUpdates(Context context) {
@@ -95,5 +122,43 @@ public class ExploreViewModel extends ViewModel {
             currentCity.setValue("未知城市");
             currentCountry.setValue("未知国家");
         }
+    }
+
+    /**
+     * 从 Bmob 加载帖子数据
+     */
+    public void loadPosts() {
+        if (Boolean.TRUE.equals(isLoadingPosts.getValue())) {
+            return;
+        }
+        isLoadingPosts.setValue(true);
+        postErrorMessage.setValue(null);
+        BmobQuery<Post> query = new BmobQuery<>("Post");
+        query.order("-createdAt");
+        query.include("userId");
+        query.findObjects(new FindListener<Post>() {
+            @Override
+            public void done(List<Post> posts, BmobException e) {
+                isLoadingPosts.setValue(false);
+                if (e == null) {
+                    if (posts != null) {
+                        postList.setValue(posts);
+                    } else {
+                        postList.setValue(new ArrayList<>());
+                        postErrorMessage.setValue("未获取到帖子数据");
+                    }
+                } else {
+                    postErrorMessage.setValue("加载帖子失败: " + e.getMessage());
+                    postList.setValue(new ArrayList<>());
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        // 停止定位监听，避免内存泄漏
+        stopLocationUpdates();
     }
 }

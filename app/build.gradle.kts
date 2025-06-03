@@ -70,4 +70,10 @@ dependencies {
 
     // 位置权限请求库
     implementation("com.google.android.gms:play-services-location:21.0.1")
+
+    // CircleImageView库
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+
+    // Preference library
+    implementation("androidx.preference:preference:1.2.0")
 }

@@ -17,11 +17,12 @@ public class PostRepository extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 2;
     private static final String TABLE_NAME = "post";
     private static final String COLUMN_ID = "id";
-    private static final String COLUMN_USER_ID = "user_id";
-    private static final String COLUMN_TITLE = "title";
-    private static final String COLUMN_CONTENT = "content";
-    private static final String COLUMN_TIMESTAMP = "timestamp";
-    private static final String COLUMN_IMAGE_URL = "image_url";
+    private static final String COLUMN_TITTLE = "tittle";
+    private static final String COLUMN_ARTICLE = "article";
+    private static final String COLUMN_IMG_URL = "img_url";
+    private static final String COLUMN_CATEGORY = "category";
+    private static final String COLUMN_LOCATION = "location";
+    private static final String COLUMN_AUTHOR_ID = "author_id";
 
     private static PostRepository instance;
 
@@ -40,11 +41,12 @@ public class PostRepository extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String sql = "CREATE TABLE " + TABLE_NAME + " ("
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + COLUMN_USER_ID + " INTEGER, "
-                + COLUMN_TITLE + " TEXT, "
-                + COLUMN_CONTENT + " TEXT, "
-                + COLUMN_TIMESTAMP + " INTEGER, "
-                + COLUMN_IMAGE_URL + " TEXT"
+                + COLUMN_TITTLE + " TEXT, "
+                + COLUMN_ARTICLE + " TEXT, "
+                + COLUMN_IMG_URL + " TEXT, "
+                + COLUMN_CATEGORY + " TEXT, "
+                + COLUMN_LOCATION + " TEXT, "
+                + COLUMN_AUTHOR_ID + " TEXT"
                 + ")";
         db.execSQL(sql);
     }
@@ -55,34 +57,44 @@ public class PostRepository extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public List<Post> getPostsByCurrentUser() {
-        // 这里假设有一个User类和获取当前用户ID的方法
-        long userId = User.getCurrentUserId();
+    // 查询当前用户的帖子
+    public List<Post> getPostsByCurrentUser(String userObjectId) {
         List<Post> posts = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.query(TABLE_NAME, null, COLUMN_USER_ID + "=?", new String[]{String.valueOf(userId)}, null, null, COLUMN_TIMESTAMP + " DESC");
+        Cursor cursor = db.query(TABLE_NAME, null, COLUMN_AUTHOR_ID + "=?", new String[]{userObjectId}, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                long id = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID));
-                String title = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITLE));
-                String content = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CONTENT));
-                long timestamp = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_TIMESTAMP));
-                String imageUrl = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE_URL));
-                posts.add(new Post(id, userId, title, content, timestamp, imageUrl));
+                Post post = new Post();
+                post.setTittle(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITTLE)));
+                post.setArticle(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ARTICLE)));
+                post.setImgUrl(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMG_URL)));
+                post.setCategory(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY)));
+                post.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LOCATION)));
+                // author 只存objectId，如需完整User对象可扩展
+                User author = new User();
+                author.setObjectId(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AUTHOR_ID)));
+                post.setAuthor(author);
+                posts.add(post);
             }
             cursor.close();
         }
         return posts;
     }
 
+    // 插入帖子
     public long insertPost(Post post) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(COLUMN_USER_ID, post.getUserId());
-        values.put(COLUMN_TITLE, post.getTitle());
-        values.put(COLUMN_CONTENT, post.getContent());
-        values.put(COLUMN_TIMESTAMP, post.getTimestamp());
-        values.put(COLUMN_IMAGE_URL, post.getImageUrl());
+        values.put(COLUMN_TITTLE, post.getTittle());
+        values.put(COLUMN_ARTICLE, post.getArticle());
+        values.put(COLUMN_IMG_URL, post.getImgUrl());
+        values.put(COLUMN_CATEGORY, post.getCategory());
+        values.put(COLUMN_LOCATION, post.getLocation());
+        if (post.getAuthor() != null) {
+            values.put(COLUMN_AUTHOR_ID, post.getAuthor().getObjectId());
+        } else {
+            values.put(COLUMN_AUTHOR_ID, "");
+        }
         return db.insert(TABLE_NAME, null, values);
     }
 

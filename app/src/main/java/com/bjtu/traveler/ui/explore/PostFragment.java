@@ -1,7 +1,6 @@
 package com.bjtu.traveler.ui.explore;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -13,20 +12,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import com.bjtu.traveler.R;
-import com.bjtu.traveler.data.repository.PostRepository;
-import com.bjtu.traveler.data.model.User;
-import com.bjtu.traveler.data.model.Post;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+
 import java.io.IOException;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 
 public class PostFragment extends Fragment {
     private static final int REQUEST_IMAGE_PICK = 1001;
@@ -68,19 +67,6 @@ public class PostFragment extends Fragment {
                 Toast.makeText(getContext(), "标题和内容不能为空", Toast.LENGTH_SHORT).show();
                 return;
             }
-            // 数据库插入
-            Context ctx = requireContext().getApplicationContext();
-            PostRepository repo = PostRepository.getInstance(ctx);
-            long userId = User.getCurrentUserId();
-            long timestamp = System.currentTimeMillis();
-            String imageUrl = selectedImageUri != null ? selectedImageUri.toString() : "";
-            Post post = new Post(0, userId, title, content, timestamp, imageUrl);
-            repo.insertPost(post);
-            Toast.makeText(getContext(), "发布成功", Toast.LENGTH_SHORT).show();
-            requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, new DiscoverFragment())
-                .commit();
         });
 
         // 新增：返回按钮点击事件

@@ -1,34 +1,45 @@
 package com.bjtu.traveler.data.model;
 
-public class Post {
-    private long id;
-    private long userId;
-    private String title;
-    private String content;
-    private long timestamp;
-    private String imageUrl;
+import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.datatype.BmobRelation;
+import com.bjtu.traveler.data.model.User;
 
-    public Post(long id, long userId, String title, String content, long timestamp, String imageUrl) {
-        this.id = id;
-        this.userId = userId;
-        this.title = title;
-        this.content = content;
-        this.timestamp = timestamp;
-        this.imageUrl = imageUrl;
+public class Post extends BmobObject {
+    private String tittle;
+    private String article;
+    private String imgUrl;
+
+    private User author;
+
+    private String category;
+    private String location;
+
+    private User userId;
+
+    public Post() {
+        // 默认无参构造函数
     }
 
-    public long getId() { return id; }
-    public long getUserId() { return userId; }
-    public String getTitle() { return title; }
-    public String getContent() { return content; }
-    public long getTimestamp() { return timestamp; }
-    public String getImageUrl() { return imageUrl; }
+    public String getTittle() { return tittle; }
+    public void setTittle(String tittle) { this.tittle = tittle; }
 
-    public void setId(long id) { this.id = id; }
-    public void setUserId(long userId) { this.userId = userId; }
-    public void setTitle(String title) { this.title = title; }
-    public void setContent(String content) { this.content = content; }
-    public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
-    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public String getArticle() { return article; }
+    public void setArticle(String article) { this.article = article; }
+
+    public String getImgUrl() { return imgUrl; }
+    public void setImgUrl(String imgUrl) { this.imgUrl = imgUrl; }
+
+    public User getAuthor() { return author; }
+    public void setAuthor(User author) { this.author = author; }
+
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
+
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
+
+    public User getUserId() { return userId; }
+    public void setUserId(User userId) { this.userId = userId; }
 }
 
