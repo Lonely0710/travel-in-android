@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * 发现页面 Fragment，展示帖子列表（瀑布流布局）
  */
-public class DiscoverFragment extends Fragment {
+public class DiscoverFragment extends Fragment implements PostAdapter.OnPostClickListener {
     private ExploreViewModel exploreViewModel;
     private RecyclerView rvPosts;
     private PostAdapter postAdapter;
@@ -41,6 +41,7 @@ public class DiscoverFragment extends Fragment {
         rvPosts.setLayoutManager(layoutManager);
 
         postAdapter = new PostAdapter(new ArrayList<>());
+        postAdapter.setOnPostClickListener(this);
         rvPosts.setAdapter(postAdapter);
 
         exploreViewModel.getPostList().observe(getViewLifecycleOwner(), posts -> {
@@ -50,6 +51,8 @@ public class DiscoverFragment extends Fragment {
         exploreViewModel.getPostErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
             if (errorMessage != null && !errorMessage.isEmpty()) {
                 Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(requireContext(), "加载成功", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -69,5 +72,19 @@ public class DiscoverFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         exploreViewModel.loadPosts();
+    }
+
+    @Override
+    public void onPostClick(Post post) {
+        PostDetailFragment fragment = new PostDetailFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("post", post);
+        fragment.setArguments(bundle);
+
+        requireActivity().getSupportFragmentManager()
+            .beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit();
     }
 }

@@ -22,6 +22,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> { 
     private List<Post> postList;
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 
+    // 添加点击事件监听器接口和成员变量
+    private OnPostClickListener listener;
+
+    public interface OnPostClickListener {
+        void onPostClick(Post post);
+    }
+
+    public void setOnPostClickListener(OnPostClickListener listener) {
+        this.listener = listener;
+    }
+
     public PostAdapter(List<Post> postList) { // Renamed constructor
         this.postList = postList;
     }
@@ -96,6 +107,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> { 
             if (holder.tvAuthor != null) holder.tvAuthor.setVisibility(View.GONE);
             if (holder.ivAuthorAvatar != null) holder.ivAuthorAvatar.setVisibility(View.GONE);
         }
+
+        // 设置item点击事件
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onPostClick(post);
+            } else {
+                Log.w("PostAdapter", "OnPostClickListener not set.");
+            }
+        });
     }
 
     @Override
@@ -108,6 +128,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> { 
         this.postList.clear();
         if (newPostList != null) {
             this.postList.addAll(newPostList);
+        } else {
+            this.postList = new ArrayList<>(); // Ensure postList is not null
         }
         notifyDataSetChanged(); // Notify adapter that data has changed
     }
