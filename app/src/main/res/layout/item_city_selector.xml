@@ -21,10 +21,13 @@
         <!-- 白色圆形底（仅选中时显示） -->
         <ImageView
             android:id="@+id/iv_city_icon_background"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
             android:src="@drawable/bg_city_icon_circle_white"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true" />
 
         <!-- 城市图标 -->
         <ImageView
@@ -32,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerInside"
-            android:tint="@color/color_primary" /> <!-- 默认 tint，后续由 adapter 控制 -->
+            android:padding="2dp" />
     </FrameLayout>
 
     <TextView
