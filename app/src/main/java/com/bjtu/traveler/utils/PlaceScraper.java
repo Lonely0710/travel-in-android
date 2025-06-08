@@ -34,6 +34,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.Headers;
 import okio.Buffer; // 确保已导入
+import com.bjtu.traveler.utils.InternationalCityMapper; // 新增导入
 
 public class PlaceScraper {
 
@@ -135,8 +136,21 @@ public class PlaceScraper {
 
             String pinyinCityName = getPinyin(chineseCityName);
             if (pinyinCityName == null || !cityPinyinToIdMap.containsKey(pinyinCityName)) {
-                Log.e(TAG, "无法找到城市ID或拼音转换失败: " + chineseCityName);
-                throw new IllegalArgumentException("无法找到指定城市的拼音或ID: " + chineseCityName);
+                Log.e(TAG, "拼音转换失败或在城市ID映射中未找到拼音: " + chineseCityName);
+
+                // 尝试使用 InternationalCityMapper 查找英文城市名
+                String englishCityName = InternationalCityMapper.getEnglishCityName(chineseCityName);
+
+                // 检查是否找到了英文映射，并且该英文名在 cityPinyinToIdMap 中存在
+                if (!englishCityName.equals(chineseCityName) && cityPinyinToIdMap.containsKey(englishCityName)) {
+                    // 如果找到英文映射且在 map 中存在，则使用英文名作为新的 pinyinCityName
+                    pinyinCityName = englishCityName;
+                    Log.d(TAG, "通过国际城市映射找到英文名并成功匹配到城市ID: " + englishCityName);
+                } else {
+                    // 如果英文映射未找到，或者找到但不在 cityPinyinToIdMap 中，则抛出异常
+                    Log.e(TAG, "无法找到城市ID或拼音/英文转换均失败: " + chineseCityName);
+                    throw new IllegalArgumentException("无法找到指定城市的拼音或ID: " + chineseCityName);
+                }
             }
 
             String cityId = cityPinyinToIdMap.get(pinyinCityName);
@@ -277,34 +291,32 @@ public class PlaceScraper {
 
                         String shortFeatures = attractionData.optString("shortFeatures", "");
                         if (!shortFeatures.isEmpty()) {
-                            // 改进的提取description和tagNames逻辑
-                            if (shortFeatures.length() >= 4 &&
-                                shortFeatures.charAt(0) == '[' &&
-                                shortFeatures.charAt(1) == '"' &&
-                                shortFeatures.charAt(shortFeatures.length() - 2) == '"' &&
-                                shortFeatures.charAt(shortFeatures.length() - 1) == ']') {
-                                // 找到 ["..."] 模式作为description
-                                description = shortFeatures.substring(2, shortFeatures.length() - 2); // 提取引号内的内容
-                                String remainingFeatures = shortFeatures.substring(shortFeatures.length()).trim(); // ]之后的内容
+                            String processedShortFeatures = shortFeatures;
 
-                                // 解析 ] 之后的内容作为tagNames
-                                if (!remainingFeatures.isEmpty()) {
-                                    String[] parts = remainingFeatures.split("；");
-                                    for (String part : parts) {
-                                        if (!part.trim().isEmpty()) {
-                                            tagNames.add(part.trim());
-                                        }
-                                    }
+                            // 1. Handle potential leading/trailing brackets, if present
+                            if (processedShortFeatures.startsWith("[") && processedShortFeatures.endsWith("]")) {
+                                processedShortFeatures = processedShortFeatures.substring(1, processedShortFeatures.length() - 1); // Remove outer brackets
+                            }
+
+                            // 2. Split by "," and re-wrap each part with quotes
+                            String[] parts = processedShortFeatures.split("\",\"");
+
+                            StringBuilder descriptionBuilder = new StringBuilder();
+                            for (int j = 0; j < parts.length; j++) {
+                                String part = parts[j];
+                                // Ensure each part is wrapped in quotes if it's not already
+                                if (!part.startsWith("\"")) {
+                                    part = "\"" + part;
                                 }
-                            } else {
-                                // 没有 ["..."] 模式，将整个 shortFeatures 作为tagNames
-                                String[] parts = shortFeatures.split("；");
-                                for (String part : parts) {
-                                    if (!part.trim().isEmpty()) {
-                                        tagNames.add(part.trim());
-                                    }
+                                if (!part.endsWith("\"")) {
+                                    part = part + "\"";
+                                }
+                                descriptionBuilder.append(part);
+                                if (j < parts.length - 1) {
+                                    descriptionBuilder.append("\n"); // Add newline for multiple sentences
                                 }
                             }
+                            description = descriptionBuilder.toString();
                         }
 
                         // Add tags from tagNameList JSON array

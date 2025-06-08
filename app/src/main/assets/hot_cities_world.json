@@ -1,42 +1,42 @@
 [
     {
         "name": "巴黎",
-        "pinyin": "bali"
+        "pinyin": "paris"
     },
     {
         "name": "伦敦",
-        "pinyin": "lundun"
+        "pinyin": "london"
     },
     {
         "name": "纽约",
-        "pinyin": "niuyue"
+        "pinyin": "newyork"
     },
     {
         "name": "东京",
-        "pinyin": "dongjing"
+        "pinyin": "tokyo"
     },
     {
         "name": "悉尼",
-        "pinyin": "xini"
+        "pinyin": "sydney"
     },
     {
         "name": "新加坡",
-        "pinyin": "xinjiapo"
+        "pinyin": "singapore"
     },
     {
         "name": "迪拜",
-        "pinyin": "dibai"
+        "pinyin": "dubai"
     },
     {
         "name": "洛杉矶",
-        "pinyin": "luoshanji"
+        "pinyin": "losangeles"
     },
     {
         "name": "罗马",
-        "pinyin": "luoma"
+        "pinyin": "rome"
     },
     {
         "name": "首尔",
-        "pinyin": "shouer"
+        "pinyin": "seoul"
     }
 ]
