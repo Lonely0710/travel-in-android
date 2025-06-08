@@ -249,10 +249,11 @@ public class PlaceScraper {
                         JSONObject attractionData = attractionListJson.getJSONObject(i).getJSONObject("card");
 
                         String name = attractionData.optString("poiName", "");
-                        String detailPageUrl = attractionData.optString("detailPageUrl", "");
-                        if (!detailPageUrl.startsWith("http")) {
-                            detailPageUrl = "https://you.ctrip.com" + detailPageUrl; // 注意这里是 you.ctrip.com，与 API 的 m.ctrip.com 可能不同
-                        }
+                        // detailPageUrl 由 cityPinyin, cityId 和 businessId 拼接而成
+                        // 首先获取 businessId
+                        String businessId = attractionData.optString("businessId", "");
+                        String generatedDetailPageUrl = "https://you.ctrip.com/sight/" + pinyinCityName + cityId + "/" + businessId + ".html";
+                        String detailPageUrl = generatedDetailPageUrl; // 确保使用生成后的URL
 
                         String zoneName = attractionData.optString("zoneName", "");
                         String addressDistance = zoneName;
@@ -270,41 +271,63 @@ public class PlaceScraper {
                             }
                         }
 
-                        StringBuilder descriptionBuilder = new StringBuilder();
+                        // 新的 description 和 tagNames 解析逻辑
+                        String description = ""; // This will store the content from [\"..."]
+                        List<String> tagNames = new ArrayList<>(); // This will store all other descriptive tags
+
                         String shortFeatures = attractionData.optString("shortFeatures", "");
                         if (!shortFeatures.isEmpty()) {
-                            descriptionBuilder.append(shortFeatures);
+                            // 改进的提取description和tagNames逻辑
+                            if (shortFeatures.length() >= 4 &&
+                                shortFeatures.charAt(0) == '[' &&
+                                shortFeatures.charAt(1) == '"' &&
+                                shortFeatures.charAt(shortFeatures.length() - 2) == '"' &&
+                                shortFeatures.charAt(shortFeatures.length() - 1) == ']') {
+                                // 找到 ["..."] 模式作为description
+                                description = shortFeatures.substring(2, shortFeatures.length() - 2); // 提取引号内的内容
+                                String remainingFeatures = shortFeatures.substring(shortFeatures.length()).trim(); // ]之后的内容
+
+                                // 解析 ] 之后的内容作为tagNames
+                                if (!remainingFeatures.isEmpty()) {
+                                    String[] parts = remainingFeatures.split("；");
+                                    for (String part : parts) {
+                                        if (!part.trim().isEmpty()) {
+                                            tagNames.add(part.trim());
+                                        }
+                                    }
+                                }
+                            } else {
+                                // 没有 ["..."] 模式，将整个 shortFeatures 作为tagNames
+                                String[] parts = shortFeatures.split("；");
+                                for (String part : parts) {
+                                    if (!part.trim().isEmpty()) {
+                                        tagNames.add(part.trim());
+                                    }
+                                }
+                            }
                         }
 
+                        // Add tags from tagNameList JSON array
                         JSONArray tagNamesJson = attractionData.optJSONArray("tagNameList");
-                        List<String> tagNames = new ArrayList<>();
                         if (tagNamesJson != null) {
                             for (int j = 0; j < tagNamesJson.length(); j++) {
-                                tagNames.add(tagNamesJson.getString(j));
+                                String tagName = tagNamesJson.getString(j);
+                                if (!tagName.trim().isEmpty()) {
+                                    tagNames.add(tagName.trim());
+                                }
                             }
-                        }
-                        if (!tagNames.isEmpty()) {
-                            if (descriptionBuilder.length() > 0) {
-                                descriptionBuilder.append("；");
-                            }
-                            // 使用 Java 8 的 String.join，如果API Level太低，请使用循环手动拼接
-                            descriptionBuilder.append(String.join("；", tagNames));
                         }
 
+                        // Add rankDescText to tagNames
+                        String rankDescText = "";
                         JSONObject sightCategoryInfo = attractionData.optJSONObject("sightCategoryInfo");
                         if (sightCategoryInfo != null) {
-                            String rankDescText = sightCategoryInfo.optString("rankDescText", "");
-                            if (!rankDescText.isEmpty()) {
-                                if (descriptionBuilder.length() > 0) {
-                                    descriptionBuilder.append("；");
-                                }
-                                descriptionBuilder.append(rankDescText);
-                            }
+                             rankDescText = sightCategoryInfo.optString("rankDescText", "");
                         }
-                        String description = descriptionBuilder.toString();
+                        if (!rankDescText.isEmpty()) {
+                            tagNames.add(rankDescText);
+                        }
 
-
-                        String businessId = attractionData.optString("businessId", "");
                         double commentScore = attractionData.optDouble("commentScore", 0.0);
                         String sightLevel = attractionData.optString("sightLevelStr", "");
                         String coverImageUrl = attractionData.optString("coverImageUrl", "");
@@ -318,9 +341,10 @@ public class PlaceScraper {
                         double heatScore = attractionData.optDouble("heatScore", 0.0);
 
                         Destination dest = new Destination(
-                                name, detailPageUrl, addressDistance, price, description,
+                                name, detailPageUrl, addressDistance, price, description, 
                                 businessId, commentScore, sightLevel, coverImageUrl, tagNames,
-                                latitude, longitude, heatScore
+                                latitude, longitude, heatScore,
+                                pinyinCityName, cityId
                         );
                         destinations.add(dest);
                         Log.d(TAG, "爬取景点信息: " + dest.toString());
@@ -352,19 +376,22 @@ public class PlaceScraper {
         public String detailPageUrl;
         public String addressDistance;
         public int price;
-        public String description;
+        public String description; // This will now hold the content from [\"..."]
         public String businessId;
         public double commentScore;
         public String sightLevel;
         public String coverImageUrl;
-        public List<String> tagNames;
+        public List<String> tagNames; // This will hold all other descriptive tags
         public double latitude;
         public double longitude;
         public double heatScore;
+        public String cityPinyin;
+        public String cityId;
 
         public Destination(String name, String detailPageUrl, String addressDistance, int price, String description,
                            String businessId, double commentScore, String sightLevel, String coverImageUrl,
-                           List<String> tagNames, double latitude, double longitude, double heatScore) {
+                           List<String> tagNames, double latitude, double longitude, double heatScore,
+                           String cityPinyin, String cityId) { // Removed slogan parameter
             this.name = name;
             this.detailPageUrl = detailPageUrl;
             this.addressDistance = addressDistance;
@@ -378,6 +405,8 @@ public class PlaceScraper {
             this.latitude = latitude;
             this.longitude = longitude;
             this.heatScore = heatScore;
+            this.cityPinyin = cityPinyin;
+            this.cityId = cityId;
         }
 
         @Override
@@ -396,6 +425,8 @@ public class PlaceScraper {
                     ", latitude=" + latitude +
                     ", longitude=" + longitude + '\'' +
                     ", heatScore=" + heatScore +
+                    ", cityPinyin='" + cityPinyin + '\'' +
+                    ", cityId='" + cityId + '\'' +
                     '}';
         }
     }

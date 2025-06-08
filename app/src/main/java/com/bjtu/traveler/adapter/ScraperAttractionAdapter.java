@@ -42,7 +42,6 @@ public class ScraperAttractionAdapter extends RecyclerView.Adapter<ScraperAttrac
     public void onBindViewHolder(@NonNull ViewHolder h, int pos) {
         PlaceScraper.Destination d = data.get(pos);
         h.tvTitle.setText(d.name);
-        h.tvDesc.setText(d.description);
         h.tvScore.setText(String.valueOf(d.commentScore));
         h.tvLevel.setText(d.sightLevel);
         h.tvLevel.setVisibility(d.sightLevel != null && !d.sightLevel.isEmpty() ? View.VISIBLE : View.GONE);
@@ -54,6 +53,9 @@ public class ScraperAttractionAdapter extends RecyclerView.Adapter<ScraperAttrac
         } else {
             h.tvDesc.setText("暂无简介");
         }
+        h.tvDesc.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        h.tvDesc.setTypeface(null, android.graphics.Typeface.BOLD);
+
         // 价格
         if (d.price == 0) {
             h.tvPrice.setText("免费");

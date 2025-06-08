@@ -99,7 +99,8 @@ public class NationalFragment extends Fragment {
             adapter.setData(list);
         });
         adapter.setOnItemClickListener(dest -> {
-            WebViewFragment fragment = WebViewFragment.newInstance(dest.detailPageUrl);
+            String formattedUrl = "https://you.ctrip.com/sight/" + dest.cityPinyin + dest.cityId + "/" + dest.businessId + ".html";
+            WebViewFragment fragment = WebViewFragment.newInstance(formattedUrl);
             requireActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
