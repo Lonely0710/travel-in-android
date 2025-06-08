@@ -1,0 +1,42 @@
+[
+    {
+        "name": "北京",
+        "pinyin": "beijing"
+    },
+    {
+        "name": "上海",
+        "pinyin": "shanghai"
+    },
+    {
+        "name": "重庆",
+        "pinyin": "chongqing"
+    },
+    {
+        "name": "成都",
+        "pinyin": "chengdu"
+    },
+    {
+        "name": "广州",
+        "pinyin": "guangzhou"
+    },
+    {
+        "name": "杭州",
+        "pinyin": "hangzhou"
+    },
+    {
+        "name": "西安",
+        "pinyin": "xian"
+    },
+    {
+        "name": "深圳",
+        "pinyin": "shenzhen"
+    },
+    {
+        "name": "苏州",
+        "pinyin": "suzhou"
+    },
+    {
+        "name": "南京",
+        "pinyin": "nanjing"
+    }
+]

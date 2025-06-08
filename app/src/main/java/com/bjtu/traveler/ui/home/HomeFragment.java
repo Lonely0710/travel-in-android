@@ -28,6 +28,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -323,6 +324,29 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
                 showRandomCityDialogFragment();
             });
         }
+
+        View btnDomestic = root.findViewById(R.id.btn_domestic);
+        View btnInternational = root.findViewById(R.id.btn_international);
+        btnDomestic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment domesticFragment = NationalFragment.newInstance(NationalFragment.TYPE_DOMESTIC);
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, domesticFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+        btnInternational.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment internationalFragment = NationalFragment.newInstance(NationalFragment.TYPE_INTERNATIONAL);
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, internationalFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
 
         return root;
     }

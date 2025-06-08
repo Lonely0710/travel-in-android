@@ -1,0 +1,42 @@
+[
+    {
+        "name": "巴黎",
+        "pinyin": "bali"
+    },
+    {
+        "name": "伦敦",
+        "pinyin": "lundun"
+    },
+    {
+        "name": "纽约",
+        "pinyin": "niuyue"
+    },
+    {
+        "name": "东京",
+        "pinyin": "dongjing"
+    },
+    {
+        "name": "悉尼",
+        "pinyin": "xini"
+    },
+    {
+        "name": "新加坡",
+        "pinyin": "xinjiapo"
+    },
+    {
+        "name": "迪拜",
+        "pinyin": "dibai"
+    },
+    {
+        "name": "洛杉矶",
+        "pinyin": "luoshanji"
+    },
+    {
+        "name": "罗马",
+        "pinyin": "luoma"
+    },
+    {
+        "name": "首尔",
+        "pinyin": "shouer"
+    }
+]

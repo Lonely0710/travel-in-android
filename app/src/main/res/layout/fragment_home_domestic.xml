@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background">
+
+    <include layout="@layout/topbar_national" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_cities"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:clipToPadding="false"
+        android:orientation="horizontal"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_attractions"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp"
+        android:clipToPadding="false"/>
+
+</LinearLayout> 
