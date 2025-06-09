@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,11 +21,17 @@ import com.bjtu.traveler.viewmodel.HotCityViewModel;
 import com.bjtu.traveler.ui.common.WebViewFragment;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.airbnb.lottie.LottieAnimationView;
+import com.airbnb.lottie.LottieDrawable;
+import android.content.res.Resources;
+import androidx.core.content.res.ResourcesCompat;
 
 public class NationalFragment extends Fragment {
     private static final String ARG_TYPE = "type";
     public static final String TYPE_DOMESTIC = "domestic";
     public static final String TYPE_INTERNATIONAL = "international";
+
+    private LottieAnimationView lottieAnimationView;
 
     public static NationalFragment newInstance(String type) {
         NationalFragment fragment = new NationalFragment();
@@ -54,13 +61,31 @@ public class NationalFragment extends Fragment {
         ImageView btnBack = view.findViewById(R.id.btn_back);
         TextView tvTitle = view.findViewById(R.id.tv_title);
         ImageView ivTitleIcon = view.findViewById(R.id.iv_title_icon);
+        lottieAnimationView = view.findViewById(R.id.lottie_animation_view);
 
+        // 设置标题和icon
         if (TYPE_DOMESTIC.equals(type)) {
-            tvTitle.setText("国内游");
+            tvTitle.setText("China Traveling");
             ivTitleIcon.setImageResource(R.drawable.ic_home_domestic);
+            if (lottieAnimationView != null) {
+                lottieAnimationView.setAnimation(R.raw.dragging_woman);
+                lottieAnimationView.setRepeatCount(LottieDrawable.INFINITE);
+                lottieAnimationView.setVisibility(View.GONE);
+            }
         } else if (TYPE_INTERNATIONAL.equals(type)) {
-            tvTitle.setText("出境游");
+            tvTitle.setText("World Traveling");
             ivTitleIcon.setImageResource(R.drawable.ic_home_world);
+            if (lottieAnimationView != null) {
+                lottieAnimationView.setAnimation(R.raw.city_changing);
+                lottieAnimationView.setRepeatCount(LottieDrawable.INFINITE);
+                lottieAnimationView.setVisibility(View.GONE);
+            }
+        }
+        // 设置字体
+        try {
+            tvTitle.setTypeface(ResourcesCompat.getFont(requireContext(), R.font.pacifico));
+        } catch (Exception e) {
+            // 字体资源不存在时忽略
         }
 
         btnBack.setOnClickListener(v -> {
@@ -81,19 +106,53 @@ public class NationalFragment extends Fragment {
         recycler.setAdapter(adapter);
         HotCityViewModel viewModel = new ViewModelProvider(this).get(HotCityViewModel.class);
         final int[] selectedIndex = {0};
+        final boolean[] isFirstLoad = {true};
         viewModel.getHotCities().observe(getViewLifecycleOwner(), cities -> {
             if (cities != null && !cities.isEmpty()) {
                 cityAdapter.setData(cities);
                 cityAdapter.setSelectedIndex(0);
                 recyclerCities.smoothScrollToPosition(0);
-                viewModel.selectCity(cities.get(0));
+                if (isFirstLoad[0]) {
+                    isFirstLoad[0] = false;
+                    if (lottieAnimationView != null) {
+                        lottieAnimationView.setVisibility(View.VISIBLE);
+                        lottieAnimationView.playAnimation();
+                    }
+                    recycler.setAlpha(0.3f);
+                    recycler.setEnabled(false);
+                    new android.os.Handler().postDelayed(() -> {
+                        if (lottieAnimationView != null) {
+                            lottieAnimationView.cancelAnimation();
+                            lottieAnimationView.setVisibility(View.GONE);
+                        }
+                        recycler.setAlpha(1f);
+                        recycler.setEnabled(true);
+                        viewModel.selectCity(cities.get(0));
+                    }, 1500);
+                } else {
+                    viewModel.selectCity(cities.get(0));
+                }
             }
         });
         cityAdapter.setOnItemClickListener((city, pos) -> {
             selectedIndex[0] = pos;
             cityAdapter.setSelectedIndex(pos);
             recyclerCities.smoothScrollToPosition(pos);
-            viewModel.selectCity(city);
+            if (lottieAnimationView != null) {
+                lottieAnimationView.setVisibility(View.VISIBLE);
+                lottieAnimationView.playAnimation();
+            }
+            recycler.setAlpha(0.3f);
+            recycler.setEnabled(false);
+            new android.os.Handler().postDelayed(() -> {
+                if (lottieAnimationView != null) {
+                    lottieAnimationView.cancelAnimation();
+                    lottieAnimationView.setVisibility(View.GONE);
+                }
+                recycler.setAlpha(1f);
+                recycler.setEnabled(true);
+                viewModel.selectCity(city);
+            }, 1500);
         });
         viewModel.getAttractions().observe(getViewLifecycleOwner(), list -> {
             adapter.setData(list);
@@ -108,5 +167,29 @@ public class NationalFragment extends Fragment {
                 .commit();
         });
         viewModel.loadHotCities(type);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (lottieAnimationView != null) {
+            lottieAnimationView.resumeAnimation();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (lottieAnimationView != null) {
+            lottieAnimationView.pauseAnimation();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (lottieAnimationView != null) {
+            lottieAnimationView.cancelAnimation();
+        }
     }
 } 

@@ -32,13 +32,17 @@
         <ImageView
             android:id="@+id/iv_title_icon"
             android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="8dp" />
+            android:layout_height="match_parent"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:scaleType="centerInside" />
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold"
