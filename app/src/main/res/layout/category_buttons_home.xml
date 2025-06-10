@@ -67,6 +67,7 @@
 
     <!-- 周边游 -->
     <LinearLayout
+        android:id="@+id/btn_around"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -92,6 +93,7 @@
 
     <!-- 主题游 -->
     <LinearLayout
+        android:id="@+id/btn_theme"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"

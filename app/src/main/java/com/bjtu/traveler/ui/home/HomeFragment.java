@@ -327,6 +327,8 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
 
         View btnDomestic = root.findViewById(R.id.btn_domestic);
         View btnInternational = root.findViewById(R.id.btn_international);
+        View btnAround = root.findViewById(R.id.btn_around);
+        View btnTheme = root.findViewById(R.id.btn_theme);
         btnDomestic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -345,6 +347,54 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
                 transaction.replace(R.id.fragment_container, internationalFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
+            }
+        });
+        btnTheme.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = "https://www.mafengwo.cn/zt/0-0-0-1.html";
+                WebViewFragment fragment = WebViewFragment.newInstance(url);
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+            }
+        });
+        btnAround.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE + 1);
+                    return;
+                }
+                fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+                    if (location != null) {
+                        com.bjtu.traveler.api.QWeatherGeoApi.fetchCityNameByLocation(requireContext(), location.getLatitude(), location.getLongitude(), new com.bjtu.traveler.api.QWeatherGeoApi.CityNameCallback() {
+                            @Override
+                            public void onSuccess(String cityName) {
+                                if (cityName == null || cityName.isEmpty()) cityName = "北京";
+                                try {
+                                    String url = "file:///android_asset/gaode/index.html?city=" + java.net.URLEncoder.encode(cityName, "utf-8");
+                                    WebViewFragment fragment = WebViewFragment.newInstance(url);
+                                    requireActivity().getSupportFragmentManager().beginTransaction()
+                                        .replace(R.id.fragment_container, fragment)
+                                        .addToBackStack(null)
+                                        .commit();
+                                } catch (Exception e) {
+                                    android.widget.Toast.makeText(requireContext(), "跳转高德地图失败: " + e.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            @Override
+                            public void onError(String errorMsg) {
+                                android.widget.Toast.makeText(requireContext(), "定位成功但反查城市失败: " + errorMsg, android.widget.Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        android.widget.Toast.makeText(requireContext(), "定位失败，请检查定位权限和网络", android.widget.Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(e -> {
+                    android.widget.Toast.makeText(requireContext(), "定位失败: " + e.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
+                });
             }
         });
 
@@ -546,6 +596,13 @@ public class HomeFragment extends Fragment implements CityCarouselAdapter.OnCity
                 // 权限被拒绝
                 Log.e(TAG, "位置权限被拒绝");
                  updateWeatherUI(null); // 显示错误状态
+            }
+        } else if (requestCode == LOCATION_PERMISSION_REQUEST_CODE + 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                View btnAround = getView().findViewById(R.id.btn_around);
+                if (btnAround != null) btnAround.performClick();
+            } else {
+                android.widget.Toast.makeText(requireContext(), "未授予定位权限，无法获取周边游信息", android.widget.Toast.LENGTH_SHORT).show();
             }
         }
     }
