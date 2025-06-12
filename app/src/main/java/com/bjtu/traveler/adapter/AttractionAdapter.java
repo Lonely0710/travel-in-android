@@ -13,7 +13,6 @@ import com.bumptech.glide.Glide;
 import android.text.TextUtils;
 import android.content.Context;
 import android.util.LruCache;
-import com.bjtu.traveler.api.WikipediaApi;
 
 import java.util.List;
 
@@ -111,56 +110,22 @@ public class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.Vi
         return data == null ? 0 : data.size();
     }
 
-    // 图片URL缓存，避免重复请求
-    private static final LruCache<String, String> imageUrlCache = new LruCache<>(100);
-
-    // 获取景点图片URL（优先用Attraction.url，无则查百科，查到后缓存）
     private void loadAttractionImage(Context context, Attraction attraction, ImageView imageView) {
-        String cacheKey = attraction.getName();
         String url = attraction.getUrl();
         if (!TextUtils.isEmpty(url)) {
             Glide.with(context).load(url).into(imageView);
             imageView.setTag(url);
-            return;
-        }
-        String cachedUrl = imageUrlCache.get(cacheKey);
-        if (cachedUrl != null) {
-            Glide.with(context).load(cachedUrl).into(imageView);
-            imageView.setTag(cachedUrl);
-            return;
-        }
-        WikipediaApi.fetchAttractionInfo(attraction.getName(), new WikipediaApi.Callback() {
-            @Override
-            public void onSuccess(String desc, String wikiImgUrl) {
-                if (!TextUtils.isEmpty(wikiImgUrl)) {
-                    imageUrlCache.put(cacheKey, wikiImgUrl);
-                    attraction.setUrl(wikiImgUrl);
-                    Glide.with(context).load(wikiImgUrl).into(imageView);
-                    imageView.setTag(wikiImgUrl);
-                } else {
-                    // 热门区用exam1，推荐区用exam2
-                    if (layoutResId == R.layout.item_horizontal_attraction) {
-                        imageView.setImageResource(R.drawable.exam1);
-                    } else if (layoutResId == R.layout.item_vertical_attraction) {
-                        imageView.setImageResource(R.drawable.exam2);
-                    } else {
-                        imageView.setImageResource(R.drawable.ic_favorite_border);
-                    }
-                    imageView.setTag(null);
-                }
+        } else {
+            // url为空时显示默认图片
+            if (layoutResId == R.layout.item_horizontal_attraction) {
+                imageView.setImageResource(R.drawable.exam1);
+            } else if (layoutResId == R.layout.item_vertical_attraction) {
+                imageView.setImageResource(R.drawable.exam2);
+            } else {
+                imageView.setImageResource(R.drawable.ic_favorite_border);
             }
-            @Override
-            public void onFailure(int errorCode, String errorMsg) {
-                if (layoutResId == R.layout.item_horizontal_attraction) {
-                    imageView.setImageResource(R.drawable.exam1);
-                } else if (layoutResId == R.layout.item_vertical_attraction) {
-                    imageView.setImageResource(R.drawable.exam2);
-                } else {
-                    imageView.setImageResource(R.drawable.ic_favorite_border);
-                }
-                imageView.setTag(null);
-            }
-        });
+            imageView.setTag(null);
+        }
     }
 
     // 新增接口
@@ -192,4 +157,3 @@ public class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.Vi
         }
     }
 }
-

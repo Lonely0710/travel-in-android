@@ -10,8 +10,6 @@ public class Post extends BmobObject {
     private String article;
     private String imgUrl;
 
-    private User author;
-
     private String category;
     private String location;
 
@@ -29,9 +27,6 @@ public class Post extends BmobObject {
 
     public String getImgUrl() { return imgUrl; }
     public void setImgUrl(String imgUrl) { this.imgUrl = imgUrl; }
-
-    public User getAuthor() { return author; }
-    public void setAuthor(User author) { this.author = author; }
 
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }

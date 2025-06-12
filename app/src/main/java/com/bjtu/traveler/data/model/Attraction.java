@@ -119,3 +119,4 @@ public class Attraction implements Serializable {
     public String getAddressDistance() { return addressDistance; }
     public void setAddressDistance(String addressDistance) { this.addressDistance = addressDistance; }
 }
+

@@ -76,4 +76,5 @@ dependencies {
 
     // Preference library
     implementation("androidx.preference:preference:1.2.0")
+
 }
