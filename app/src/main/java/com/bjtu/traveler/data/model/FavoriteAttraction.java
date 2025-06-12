@@ -11,6 +11,7 @@ public class FavoriteAttraction extends BmobObject {
     private String description;
     private String city;
     private String country;
+    private String province;
     private String imgUrl;
     private String userId;
 
@@ -24,9 +25,10 @@ public class FavoriteAttraction extends BmobObject {
     public void setCity(String city) { this.city = city; }
     public String getCountry() { return country; }
     public void setCountry(String country) { this.country = country; }
+    public String getProvince() { return province; }
+    public void setProvince(String province) { this.province = province; }
     public String getImgUrl() { return imgUrl; }
     public void setImgUrl(String imgUrl) { this.imgUrl = imgUrl; }
     public String getUserId() { return userId; }
     public void setUserId(String userId) { this.userId = userId; }
 }
-

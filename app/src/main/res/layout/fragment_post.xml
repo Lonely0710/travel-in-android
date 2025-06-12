@@ -27,53 +27,26 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/gradient_divider_horizontal"/>
 
-    <!-- 图片选择区 -->
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-2dp"
-        android:layout_marginBottom="0dp"
-        android:overScrollMode="never"
-        android:scrollbars="none">
-        <LinearLayout
-            android:id="@+id/layout_images"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <!-- 动态添加图片缩略图和加号按钮 -->
-        </LinearLayout>
-    </HorizontalScrollView>
+    <!-- 单张图片选择，无删除按钮，仅加号/图片可点击 -->
+    <FrameLayout
+        android:id="@+id/image_container"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="8dp">
 
-    <!-- 图片添加区域 -->
+        <ImageView
+            android:id="@+id/iv_selected_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_add"
+            android:background="@drawable/bg_add_image"
+            android:contentDescription="选择图片" />
+    </FrameLayout>
 
     <!-- 标题输入 -->
-    <LinearLayout
-        android:id="@+id/layout_add_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="16dp"
-        android:gravity="start"
-        android:orientation="horizontal">
-
-        <FrameLayout
-            android:id="@+id/btn_add_image"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:background="@drawable/bg_add_image"
-            android:foreground="?attr/selectableItemBackground">
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_add"
-                android:tint="#CCCCCC" />
-        </FrameLayout>
-        <!-- 这里可动态添加图片缩略图 -->
-    </LinearLayout>
-
     <EditText
         android:id="@+id/et_post_title"
         android:layout_width="match_parent"
@@ -81,7 +54,7 @@
         android:hint="添加标题"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@color/divider"
+        android:textColor="#222222"
         android:background="@drawable/bg_post_edit_rounded"
         android:padding="14dp"
         android:layout_marginHorizontal="24dp"
@@ -95,7 +68,7 @@
         android:hint="添加正文"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:textColor="@color/divider"
+        android:textColor="#222222"
         android:background="@drawable/bg_post_edit_rounded"
         android:padding="14dp"
         android:gravity="top"
@@ -111,9 +84,31 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginHorizontal="16dp">
-        <LinearLayout android:id="@+id/layout_location" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:paddingVertical="8dp" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackground">
-            <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_location" app:tint="#222"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="标记地点" android:textSize="16sp" android:textStyle="bold" android:textColor="@color/text_primary" android:layout_marginStart="12dp"/>
+
+        <LinearLayout
+            android:id="@+id/layout_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:paddingVertical="8dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_location"
+                app:tint="#222" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="标记地点"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
             <!-- Spacer View to push arrow to the right -->
             <View
                 android:layout_width="0dp"
@@ -125,10 +120,25 @@
                 android:id="@+id/ic_arrow_right"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_arrow_right"
-                android:tint="#888888"
-                android:layout_marginStart="8dp" />
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_arrow_right" />
         </LinearLayout>
+
+        <!-- 直接显示文本输入框，初始隐藏，点击右箭头后显示且不再隐藏 -->
+        <EditText
+            android:id="@+id/et_location_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="请输入地点信息"
+            android:background="@drawable/bg_post_edit_rounded"
+            android:padding="12dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginHorizontal="16dp"
+            android:textSize="16sp"
+            android:textColor="#222222"
+            android:visibility="gone"/>
+
         <!-- 三个Chip -->
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chip_group_categories"
@@ -178,6 +188,7 @@
                 app:textEndPadding="8dp"
                  />
         </com.google.android.material.chip.ChipGroup>
+
     </LinearLayout>
 
     <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"/>
@@ -205,4 +216,3 @@
         android:background="@drawable/bg_post_btn"/>
 
 </LinearLayout>
-

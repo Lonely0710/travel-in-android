@@ -155,10 +155,24 @@ public class ExploreViewModel extends ViewModel {
         });
     }
 
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        // 停止定位监听，避免内存泄漏
-        stopLocationUpdates();
+    // 发帖（自动绑定当前用户）
+    public void insertPost(Context context, Post post, Runnable onSuccess, Runnable onFailure) {
+        User currentUser = com.bjtu.traveler.data.repository.UserRepository.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            post.setUserId(currentUser);
+        }
+        com.bjtu.traveler.data.repository.PostRepository.getInstance(context).insertPost(post, new cn.bmob.v3.listener.SaveListener<String>() {
+            @Override
+            public void done(String objectId, cn.bmob.v3.exception.BmobException e) {
+                if (e == null) {
+                    postErrorMessage.postValue("发布成功");
+                    loadPosts();
+                    if (onSuccess != null) onSuccess.run();
+                } else {
+                    postErrorMessage.postValue("发布失败: " + e.getMessage());
+                    if (onFailure != null) onFailure.run();
+                }
+            }
+        });
     }
 }

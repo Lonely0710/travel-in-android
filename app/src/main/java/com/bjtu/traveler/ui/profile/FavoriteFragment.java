@@ -12,9 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bjtu.traveler.R;
 import com.bjtu.traveler.adapter.AttractionAdapter;
 import com.bjtu.traveler.data.model.Attraction;
+import com.bjtu.traveler.data.model.FavoriteAttraction;
+import com.bjtu.traveler.data.repository.FavoriteRepository;
 import com.bjtu.traveler.ui.explore.AttractionDetailFragment;
 import java.util.ArrayList;
 import java.util.List;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.listener.FindListener;
+import com.bjtu.traveler.data.model.User;
 
 public class FavoriteFragment extends Fragment {
     @Nullable
@@ -24,11 +29,38 @@ public class FavoriteFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_favorite, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.rv_collect_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        // TODO: 替换为实际收藏数据
+        // 查询当前用户所有收藏
+        User user = BmobUser.getCurrentUser(User.class);
+        String userId = user != null ? user.getObjectId() : null;
         List<Attraction> favoriteList = new ArrayList<>();
-        favoriteList.add(new Attraction(1, "克林齐火山", 0, 0, "Hiking", "火山简介", "占碑省", "占碑", "苏门答腊", null));
-        favoriteList.add(new Attraction(2, "布罗莫火山", 0, 0, "Hiking", "布罗莫简介", "东爪哇", "泗水", "印尼", null));
         AttractionAdapter adapter = new AttractionAdapter(favoriteList, R.layout.item_vertical_attraction);
+        recyclerView.setAdapter(adapter);
+        if (userId != null) {
+            FavoriteRepository.queryAllFavorites(userId, new FindListener<FavoriteAttraction>() {
+                @Override
+                public void done(List<FavoriteAttraction> list, cn.bmob.v3.exception.BmobException e) {
+                    if (e == null && list != null) {
+                        favoriteList.clear();
+                        for (FavoriteAttraction fav : list) {
+                            Attraction attraction = new Attraction(
+                                    0,
+                                    fav.getName(),
+                                    0,
+                                    0,
+                                    fav.getCategory(),
+                                    fav.getDescription(),
+                                    "",
+                                    fav.getCity(),
+                                    fav.getCountry(),
+                                    fav.getImgUrl()
+                            );
+                            favoriteList.add(attraction);
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            });
+        }
         adapter.setOnAttractionClickListener((attraction, imgUrl, city, country) -> {
             AttractionDetailFragment fragment = AttractionDetailFragment.newInstance(
                     attraction.getName(),
@@ -44,8 +76,6 @@ public class FavoriteFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
         });
-        recyclerView.setAdapter(adapter);
         return view;
     }
 }
-

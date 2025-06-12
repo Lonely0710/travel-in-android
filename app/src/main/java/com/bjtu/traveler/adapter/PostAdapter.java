@@ -50,11 +50,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> { 
         // 日志输出
         Log.d("PostAdapter", "onBindViewHolder: imgUrl=" + post.getImgUrl());
         User user = post.getUserId();
-        if (user != null) {
-            Log.d("PostAdapter", "user.username=" + user.getUsername() + ", avatarUrl=" + user.getAvatarUrl());
-        } else {
-            Log.d("PostAdapter", "user is null");
-        }
         // 标题
         holder.tvTitle.setText(post.getTittle());
         // 图片加载
@@ -84,15 +79,18 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> { 
         if (user != null) {
             String username = user.getUsername();
             String avatarUrl = user.getAvatarUrl();
+            Log.d("PostAdapter", "user != null, username=" + username + ", avatarUrl=" + avatarUrl);
             if (username != null && !username.isEmpty()) {
                 holder.tvAuthor.setVisibility(View.VISIBLE);
                 holder.tvAuthor.setText(username);
             } else {
                 holder.tvAuthor.setVisibility(View.GONE);
+                Log.d("PostAdapter", "username 为空或 null");
             }
             if (holder.ivAuthorAvatar != null) {
                 if (avatarUrl != null && !avatarUrl.isEmpty()) {
                     holder.ivAuthorAvatar.setVisibility(View.VISIBLE);
+                    Log.d("PostAdapter", "加载头像: " + avatarUrl);
                     Glide.with(holder.itemView.getContext())
                             .load(avatarUrl)
                             .placeholder(R.drawable.ic_avatar)
@@ -101,11 +99,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> { 
                 } else {
                     holder.ivAuthorAvatar.setVisibility(View.VISIBLE);
                     holder.ivAuthorAvatar.setImageResource(R.drawable.ic_avatar);
+                    Log.d("PostAdapter", "avatarUrl 为空或 null，显示默认头像");
                 }
             }
         } else {
             if (holder.tvAuthor != null) holder.tvAuthor.setVisibility(View.GONE);
             if (holder.ivAuthorAvatar != null) holder.ivAuthorAvatar.setVisibility(View.GONE);
+            Log.d("PostAdapter", "user == null");
         }
 
         // 设置item点击事件

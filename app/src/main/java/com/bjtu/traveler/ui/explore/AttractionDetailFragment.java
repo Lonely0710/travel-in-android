@@ -31,6 +31,7 @@ public class AttractionDetailFragment extends Fragment {
     public static final String ARG_CITY = "city";
     public static final String ARG_COUNTRY = "country";
     public static final String ARG_IMG_URL = "imgUrl";
+    public static final String ARG_PROVINCE = "province";
 
     @Nullable
     @Override
@@ -51,6 +52,7 @@ public class AttractionDetailFragment extends Fragment {
         String description = args != null ? args.getString(ARG_DESCRIPTION) : "";
         String city = args != null ? args.getString(ARG_CITY) : "";
         String country = args != null ? args.getString(ARG_COUNTRY) : "";
+        String province = args != null ? args.getString(ARG_PROVINCE) : "";
         String imgUrl = args != null ? args.getString(ARG_IMG_URL) : "";
 
         tvTitle.setText(name);
@@ -122,9 +124,10 @@ public class AttractionDetailFragment extends Fragment {
                 FavoriteAttraction fav = new FavoriteAttraction();
                 fav.setName(name);
                 fav.setCategory(category);
-                fav.setDescription(tvDescription.getText().toString());
+                fav.setDescription(!TextUtils.isEmpty(description) ? description : tvDescription.getText().toString());
                 fav.setCity(city);
                 fav.setCountry(country);
+                fav.setProvince(province);
                 fav.setImgUrl(imgUrl);
                 fav.setUserId(userId);
                 FavoriteRepository.addFavorite(fav, new SaveListener<String>() {
@@ -177,4 +180,3 @@ public class AttractionDetailFragment extends Fragment {
         return fragment;
     }
 }
-

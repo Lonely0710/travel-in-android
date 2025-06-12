@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@color/background">
+    android:background="@color/background"
+    android:fillViewport="true">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:padding="16dp">
 
         <include
             layout="@layout/view_recommend_location_card"
-            android:id="@+id/location_card"
-            android:layout_marginTop="16dp" />
-
-        <!-- 搜索栏已移至view_recommend_location_card.xml -->
+            android:id="@+id/location_card"/>
 
         <!-- Hot & Popular Section -->
         <TextView
@@ -201,4 +198,5 @@
         </LinearLayout>
 
     </LinearLayout>
-</ScrollView>
+
+</androidx.core.widget.NestedScrollView>

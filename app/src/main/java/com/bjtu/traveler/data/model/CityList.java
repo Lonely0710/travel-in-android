@@ -18,9 +18,7 @@ public class CityList {
         "中山市", "惠州市", "江门市", "湛江市", "汕头市", "揭阳市", "茂名市",
         // 国际热门城市
         "New York", "London", "Paris", "Tokyo", "Singapore", "Dubai",
-        "Sydney", "Seoul", "Los Angeles", "Berlin", "Rome", "Barcelona",
-        "Istanbul", "Moscow", "Toronto", "Vancouver", "San Francisco",
-        "Chicago", "Las Vegas", "Miami", "Bangkok", "Kuala Lumpur"
+        "Sydney", "Seoul", "Los Angeles", "Berlin", "Rome", "Barcelona"
     );
 
     // 推荐景点用的城市/地区列表（更广泛，含省份、特别行政区等）
@@ -61,18 +59,18 @@ public class CityList {
         "Sydney", "Seoul", "Los Angeles", "Berlin", "Rome", "Barcelona",
         "Istanbul", "Moscow", "Toronto", "Vancouver", "San Francisco",
         "Chicago", "Las Vegas", "Miami", "Bangkok", "Kuala Lumpur",
-        "Mumbai", "Delhi", "Jakarta", "Manila", "Ho Chi Minh City",
-        "Cairo", "Cape Town", "Johannesburg", "Nairobi", "Rio de Janeiro",
-        "Sao Paulo", "Buenos Aires", "Mexico City", "Lima", "Santiago",
-        "Amsterdam", "Brussels", "Vienna", "Prague", "Madrid", "Lisbon",
-        "Athens", "Oslo", "Stockholm", "Helsinki", "Copenhagen", "Warsaw",
-        "Budapest", "Dublin", "Edinburgh", "Zurich", "Geneva", "Milan",
-        "Venice", "Florence", "Osaka", "Kyoto", "Seoul", "Taipei", "Hong Kong",
-        "Macau", "Manila", "Hanoi", "Phnom Penh", "Vientiane", "Ulaanbaatar",
-        "Colombo", "Dhaka", "Kathmandu", "Tehran", "Riyadh", "Doha",
-        "Abu Dhabi", "Muscat", "Tel Aviv", "Jerusalem", "Baghdad",
-        "Auckland", "Wellington", "Honolulu", "Reykjavik", "Havana",
-        "Kingston", "San Juan", "Bogota", "Caracas", "Quito", "La Paz"
+        "Mumbai", "Delhi", "Jakarta", "Manila", "Ho Chi Minh City"
+//        "Cairo", "Cape Town", "Johannesburg", "Nairobi", "Rio de Janeiro",
+//        "Sao Paulo", "Buenos Aires", "Mexico City", "Lima", "Santiago",
+//        "Amsterdam", "Brussels", "Vienna", "Prague", "Madrid", "Lisbon",
+//        "Athens", "Oslo", "Stockholm", "Helsinki", "Copenhagen", "Warsaw",
+//        "Budapest", "Dublin", "Edinburgh", "Zurich", "Geneva", "Milan",
+//        "Venice", "Florence", "Osaka", "Kyoto", "Seoul", "Taipei", "Hong Kong",
+//        "Macau", "Manila", "Hanoi", "Phnom Penh", "Vientiane", "Ulaanbaatar",
+//        "Colombo", "Dhaka", "Kathmandu", "Tehran", "Riyadh", "Doha",
+//        "Abu Dhabi", "Muscat", "Tel Aviv", "Jerusalem", "Baghdad",
+//        "Auckland", "Wellington", "Honolulu", "Reykjavik", "Havana",
+//        "Kingston", "San Juan", "Bogota", "Caracas", "Quito", "La Paz"
     );
 }
 

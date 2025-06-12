@@ -16,12 +16,12 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="160dp"> <!-- 修改图片高度为160dp，缩小图片区域 -->
 
             <ImageView
                 android:id="@+id/iv_post_image"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_image_placeholder"
@@ -85,7 +85,7 @@
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical">
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <ImageView
                     android:id="@+id/iv_author_avatar"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -133,4 +133,3 @@
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
-
