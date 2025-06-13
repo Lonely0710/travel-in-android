@@ -177,7 +177,7 @@ QWEATHER_API_KEY=您的和风天气API Key
 
 ### APK安装
 ```bash
-adb install app/release/traveler-v1.0.0.apk
+adb install app/release/travelin_release_v1.0.apk
 ```
 
 ### 开发构建
