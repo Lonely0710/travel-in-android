@@ -30,6 +30,16 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     buildToolsVersion = "34.0.0"
+
+    applicationVariants.all {
+        val variant = this
+        variant.outputs
+            .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
+            .forEach { output ->
+                val outputFileName = "travelin_${variant.buildType.name}_v${variant.versionName}.apk"
+                output.outputFileName = outputFileName
+            }
+    }
 }
 
 dependencies {
