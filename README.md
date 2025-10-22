@@ -3,14 +3,13 @@
 </div>
 
 <p align="center">
-  <img alt="license" src="https://img.shields.io/github/license/Lonely0710/travel-in-Android" />
-  <img alt="stars" src="https://img.shields.io/github/stars/Lonely0710/travel-in-Android" />
-  <img alt="forks" src="https://img.shields.io/github/forks/Lonely0710/travel-in-Android" />
-  <img alt="issues" src="https://img.shields.io/github/issues/Lonely0710/travel-in-Android" />
-  <!-- 如果你的项目有发布版本，可以取消下面这行的注释 -->
-  <!-- <img alt="release" src="https://img.shields.io/github/v/release/Lonely0710/food-journal-Android" /> -->
-  <!-- 如果你的项目有总下载量统计，可以取消下面这行的注释 -->
-  <!-- <img alt="downloads" src="https://img.shields.io/github/downloads/Lonely0710/food-journal-Android/total" /> -->
+  <img alt="license" src="https://img.shields.io/github/license/Lonely0710/travel-in-android?style=flat-round" />
+  <img alt="gitHubtoplanguage" src="https://img.shields.io/github/languages/top/Lonely0710/travel-in-android" />
+  <img alt="issues" src="https://img.shields.io/github/issues/Lonely0710/travel-in-android" />
+  <img alt="contributors" src="https://img.shields.io/github/contributors/Lonely0710/travel-in-android" />
+  <img alt="stars" src="https://img.shields.io/github/stars/Lonely0710/travel-in-android" />
+  <!-- <img alt="release" src="https://img.shields.io/github/v/release/Lonely0710/drama-tracker-Android" /> -->
+  <!-- <img alt="downloads" src="https://img.shields.io/github/downloads/Lonely0710/drama-tracker-Android/total" /> -->
 </p>
 
 # Traveler - 你的专属旅行助手
@@ -25,7 +24,7 @@
 | **发现** | 智能推荐/内容浏览/互动社区 | AI推荐算法 + Compose UI         |
 | **路线** | 智能规划/行程管理/足迹记录 | 路线算法 + Room持久化           |
 | **地图** | 地理标记/POI检索/导航指引  | Mapbox/高德地图API + 自定义图层 |
-| **同步** | 多端实时同步/离线访问      | Appwrite SDK + Room             |
+| **同步** | 多端实时同步/离线访问      | Bmob 后端云             |
 
 ## 🖼 界面展示
 
@@ -178,15 +177,6 @@ QWEATHER_API_KEY=您的和风天气API Key
 ### APK安装
 ```bash
 adb install app/release/travelin_release_v1.0.apk
-```
-
-### 开发构建
-```bash
-# 调试版本
-./gradlew assembleDebug
-
-# 发布版本
-./gradlew assembleRelease
 ```
 
 ## 🌱 贡献指引
